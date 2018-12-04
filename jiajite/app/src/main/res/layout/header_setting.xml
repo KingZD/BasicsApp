@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:swipe="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
+
+    <TextView
+        android:id="@+id/tvDesc"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:drawableRight="@mipmap/ic_right_arrow1"
+        android:gravity="center|start"
+        android:text="功能介绍"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/vSplit"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tvDesc"
+        android:background="@color/darkgray" />
+
+    <TextView
+        android:id="@+id/tvTouch"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@+id/vSplit"
+        android:gravity="center|start"
+        android:text="触摸震动"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <com.project.jaijite.gui.SwitchButton
+        android:id="@+id/sbTouch"
+        android:layout_width="85dp"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/tvTouch"
+        android:layout_alignBottom="@+id/tvTouch"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="5dp"
+        swipe:sb_checked="true" />
+
+    <View
+        android:id="@+id/vSplit_"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tvTouch"
+        android:background="@color/darkgray" />
+
+    <TextView
+        android:id="@+id/tvAdd"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@+id/vSplit_"
+        android:drawableRight="@mipmap/ic_right_arrow1"
+        android:gravity="center|start"
+        android:text="添加设备"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tvAdd"
+        android:background="@color/darkgray" />
+</merge>

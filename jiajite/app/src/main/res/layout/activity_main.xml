@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.MainActivity">
+
+    <FrameLayout
+        android:id="@+id/flBody"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/color_title"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbLight"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:checked="true"
+            android:drawableTop="@drawable/home_led_tab_select"
+            android:gravity="center"
+            android:onClick="select"
+            android:padding="5dp"
+            android:text="照明"
+            android:textColor="@color/color_white" />
+
+        <RadioButton
+            android:id="@+id/rbSetting"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/home_setting_tab_select"
+            android:gravity="center"
+            android:onClick="select"
+            android:padding="5dp"
+            android:text="设置"
+            android:textColor="@color/color_white" />
+    </RadioGroup>
+</LinearLayout>

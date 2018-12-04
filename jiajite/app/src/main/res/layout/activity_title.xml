@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="55dp"
+    android:background="@color/color_title">
+
+    <Button
+        android:id="@+id/btLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#00ffffff"
+        android:drawableStart="@mipmap/ic_back"
+        android:drawableLeft="@mipmap/ic_back"
+        android:gravity="center|start"
+        android:paddingStart="10dp"
+        android:paddingLeft="10dp"
+        android:textColor="@color/color_white"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="我的"
+        android:textColor="@color/color_white"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btRight"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="#00ffffff"
+        android:gravity="end|center"
+        android:paddingEnd="10dp"
+        android:paddingRight="10dp"
+        android:textColor="@color/color_white"
+        android:textSize="18sp" />
+</RelativeLayout>

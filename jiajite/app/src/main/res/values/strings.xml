@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">家基特</string>
+    <string name="titleLed">LED灯</string>
+    <string name="titleLedEdit">添加LED灯</string>
+    <string name="titleLedSearch">灯列表</string>
+    <string name="titleAppliances">家电</string>
+    <string name="titleSecurity">安防</string>
+    <string name="titleCar">汽车</string>
+    <string name="titleSetting">设置</string>
+
+    <!-- led控制页面 -->
+    <string name="ledPower">开关</string>
+    <string name="ledNightlight">小夜灯</string>
+    <string name="ledGroup1">A组</string>
+    <string name="ledGroup2">B组</string>
+    <string name="ledGroup3">C组</string>
+    <string name="ledGroup4">D组</string>
+
+    <string name="falsh1">♪</string>
+    <string name="falsh2">♪</string>
+    <string name="falsh3">♫</string>
+    <string name="falsh4">♬</string>
+    <string name="falsh5">¶</string>
+    <string name="falsh6">‖</string>
+    <string name="colorSelectorDescription">色彩选择器</string>
+
+    <string name="passwordHint">请输入密码</string>
+    <string name="passwordTips">密码建议设置成：大小写+字母+数字+字符，总共16位。</string>
+    <string name="macTips">MAC地址通常在以下地方显示：系统设置-WLAN-高级设置-MAC地址（只需要如实相应的字母和英文，不需要输入中间的冒号。例：E005C54DF500）</string>
+    <string name="cancel">取消</string>
+    <string name="enter">确定</string>
+    <string name="save">保存</string>
+    <string name="set">设置</string>
+
+    <string name="titleSetSleep">睡眠模式时间</string>
+    <string name="titleSetTimingOpen">定时开灯时间</string>
+    <string name="titleSetTimingClose">定时关灯时间</string>
+    <string name="titleManual">操作手册</string>
+    <string name="titleAboutUs">关于我们</string>
+
+    <string name="sleepTimeFormat">睡眠模式：%d分钟</string>
+    <string name="timingOpenFormat" formatted="false">定时开灯：%s : %s</string>
+    <string name="timingCloseFormat" formatted="false">定时关灯：%s : %s</string>
+
+
+    <!-- 设置页面 -->
+    <string name="appName">HOME KITT</string>
+    <string name="appNameChinese">智能家居控制系统</string>
+
+    <string name="groupA">A组</string>
+    <string name="groupB">B组</string>
+    <string name="groupC">C组</string>
+    <string name="groupD">D组</string>
+
+    <!-- 通用  -->
+    <string name="group">组</string>
+    <string name="hours">小时</string>
+    <string name="minutes">分钟</string>
+    <string name="delete">删除</string>
+    <string name="update">更新</string>
+
+    <string name="deleteLedPrompt">确定删除该灯？</string>
+    <string name="mac_hint">MAC地址通常在以下地方显示：\n1，系统设置—WLAN—高级设置—MAC地址；\n2，系统设置—关于手机—状态信息—WLAN MAC地址。\n提示：只需填写字母和英文部分。例：E005C54DF500</string>
+
+</resources>
