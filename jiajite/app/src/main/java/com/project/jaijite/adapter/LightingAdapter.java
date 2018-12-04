@@ -31,5 +31,6 @@ public class LightingAdapter extends BaseQuickAdapter<LightInfo, BaseViewHolder>
         helper.setText(R.id.delayCloseLedTv, delayLedTv);
         helper.addOnClickListener(R.id.btReName);
         helper.addOnClickListener(R.id.deleteBtn);
+        helper.addOnClickListener(R.id.llBody);
     }
 }

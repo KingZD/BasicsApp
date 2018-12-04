@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:src="@drawable/group_a_select" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:src="@drawable/group_b_select" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:src="@drawable/group_c_select" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:src="@drawable/group_d_select" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/darkgray" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:src="@mipmap/light_mode" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:src="@mipmap/light_time" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:src="@mipmap/light_music" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:src="@mipmap/light_voice" />
+    </LinearLayout>
+</LinearLayout>

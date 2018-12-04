@@ -10,6 +10,7 @@ import android.widget.EditText;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.project.jaijite.R;
 import com.project.jaijite.activity.AddLightActivity;
+import com.project.jaijite.activity.LightSettingActivity;
 import com.project.jaijite.adapter.LightingAdapter;
 import com.project.jaijite.base.BaseFragment;
 import com.project.jaijite.dialog.TipsDialog;
@@ -145,6 +146,11 @@ public class LightingFragment extends BaseFragment
         try {
             final LightInfo lightInfo = mAdapter.getData().get(position);
             switch (view.getId()) {
+                case R.id.llBody:
+                    Intent intent = new Intent(getActivity(), LightSettingActivity.class);
+                    intent.putExtra(LightSettingActivity.PARAM, lightInfo);
+                    startActivity(intent);
+                    break;
                 case R.id.btReName:
                     TipsDialog.getInstance()
                             .createDialog(getActivity(), R.layout.dialog_light_rename)

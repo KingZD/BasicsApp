@@ -51,6 +51,17 @@ public abstract class BaseTitleActivity extends AppCompatActivity {
      * 设置左标题
      *
      * @param word  文字
+     */
+    protected void setTitleLeft(String word) {
+        if (btLeft != null) {
+            btLeft.setText(word);
+        }
+    }
+
+    /**
+     * 设置左标题
+     *
+     * @param word  文字
      * @param resId 资源
      */
     protected void setTitleLeft(String word, int resId) {
@@ -70,6 +81,17 @@ public abstract class BaseTitleActivity extends AppCompatActivity {
     protected void setTvTitle(String word) {
         if (tvTitle != null) {
             tvTitle.setText(word);
+        }
+    }
+
+    /**
+     * 设置右标题
+     *
+     * @param word  文字
+     */
+    protected void setTitleRight(String word) {
+        if (btRight != null) {
+            btRight.setText(word);
         }
     }
 
