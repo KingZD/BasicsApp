@@ -1,0 +1,34 @@
+<resources>
+
+
+    <!-- 环形选择器的自定义属性 -->
+
+    <declare-styleable name="Circle_Selector">
+
+        <!-- 圆心的半径 -->
+
+        <attr name="circle_center_radius" format="integer"/>
+
+        <!-- 圆心颜色 -->
+
+        <attr name="circle_center_color" format="color"/>
+
+        <!-- 指针宽度 -->
+
+        <attr name="circle_point_width" format="integer"/>
+
+        <!-- 指针颜色 -->
+
+        <attr name="circle_point_color" format="color"/>
+
+        <!-- 选中项下的圆形背景半径 -->
+
+        <attr name="circle_target_radius" format="integer"/>
+
+        <!-- 选中项下的圆形背景颜色 -->
+
+        <attr name="circle_target_color" format="color"/>
+
+    </declare-styleable>
+
+</resources>

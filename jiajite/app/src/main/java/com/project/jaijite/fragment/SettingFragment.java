@@ -94,7 +94,7 @@ public class SettingFragment extends BaseFragment
                                 public void onClick(View v, TipsDialog dialog) {
                                     mAdapter.getData().remove(position);
                                     DeviceDB.delLight(deviceInfo);
-                                    mAdapter.notifyDataSetChanged();
+                                    mAdapter.notifyItemRemoved(position+1);
                                 }
                             })
                             .show();
