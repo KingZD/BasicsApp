@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
 
     <com.project.jaijite.gui.TimerPickerView
+        android:id="@+id/tpTimer"
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

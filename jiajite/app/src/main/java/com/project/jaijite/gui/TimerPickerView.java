@@ -24,10 +24,11 @@ public class TimerPickerView extends View {
     SweepGradient btnGradient;
     Path mBtnPath;
     Matrix mBtnMatrix;
-    Bitmap lightOpen;
+    Bitmap light, lightOpen, lightClose;
 
-    private int degrees = 90;
-    private float mWaterDegress = 0;
+    private float mDefDegress = 70;
+    private float mWaterDegress = 350;
+    private boolean currentLightStatus = false;
     /**
      * 中心点
      */
@@ -57,6 +58,8 @@ public class TimerPickerView extends View {
         mBtnPath = new Path();
         circleTime = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_circle_time);
         lightOpen = BitmapFactory.decodeResource(getResources(), R.mipmap.light_open);
+        lightClose = BitmapFactory.decodeResource(getResources(), R.mipmap.light_close);
+        light = lightClose;
     }
 
     @Override
@@ -96,7 +99,7 @@ public class TimerPickerView extends View {
         mPaint.setStyle(Paint.Style.FILL);
         if (btnGradient == null)
             btnGradient = new SweepGradient(mWidth / 2, mHeight / 2, new int[]{
-                    Color.GRAY, Color.LTGRAY, Color.GRAY, Color.LTGRAY, Color.GRAY, Color.LTGRAY}, new float[]{0f,0.2f,0.4f,0.6f,0.8f,1f});
+                    Color.GRAY, Color.LTGRAY, Color.GRAY, Color.LTGRAY, Color.GRAY, Color.LTGRAY}, new float[]{0f, 0.2f, 0.4f, 0.6f, 0.8f, 1f});
         mPaint.setShader(btnGradient);
         canvas.drawCircle(0, 0, cWidth / 2, mPaint);
 
@@ -108,15 +111,15 @@ public class TimerPickerView extends View {
 
         mPaint.setStrokeWidth(10);
         mBtnPath.reset();
-        mBtnPath.moveTo(0, mHeight / 2 - cWidth / 2);
-        mBtnPath.lineTo(0, mHeight / 2 - cWidth / 2 + 40);
+        mBtnPath.moveTo(0, mHeight / 2 + cWidth / 2);
+        mBtnPath.lineTo(0, mHeight / 2 + cWidth / 2 - 40);
         mBtnMatrix.postRotate(mWaterDegress);
         mBtnPath.transform(mBtnMatrix);
         canvas.drawPath(mBtnPath, mPaint);
     }
 
     private void drawSwitch(float cWidth, Canvas canvas) {
-        canvas.drawBitmap(lightOpen,
+        canvas.drawBitmap(light,
                 null,
                 new RectF(-cWidth / 2, -cWidth / 2, cWidth / 2, cWidth / 2), mPaint);
     }
@@ -124,29 +127,81 @@ public class TimerPickerView extends View {
     /**
      * 初始水滴指针方向
      */
-    private float mLastUnit = (float) Math.toRadians(degrees * 2);
+    private float mLastUnit = 0;
+
+    int time = 1;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX() - CENTER_X;
         float y = event.getY() - CENTER_Y;
-
+        boolean inCenter = Math.sqrt(x * x + y * y) <= mWidth / 5 / 2;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
-                float angle = (float) Math.atan2(y, x) - (float) Math.toRadians(degrees);
-                mWaterDegress = (float) Math.toDegrees((angle - mLastUnit));
-                mLastUnit = angle;
-                //将圆周率转换成0-1进行颜色取色范围解析
-                float unit = angle / (float) (2 * Math.PI);
-                if (unit < 0) {
-                    unit += 1;
+                if (!inCenter) {
+                    float touch = (float) Math.atan2(y, x);
+                    float angle = touch - (float) Math.toRadians(mDefDegress);
+                    mWaterDegress = (float) Math.toDegrees((angle - mLastUnit));
+//                double jd = 180 * touch / Math.PI;
+//                if (jd > 0 && jd <= mDefDegress) {
+//                    mWaterDegress = (float) Math.toRadians(mDefDegress);
+//                    break;
+//                }
+//                if (jd < 0 && jd >= -20 && allowSlide) {
+//                    mWaterDegress = -(float) Math.toRadians(mDefDegress);
+//                    break;
+//                }
+                    mLastUnit = angle;
+
+                    //将圆周率转换成0-1进行颜色取色范围解析
+                    float unit = angle / (float) (2 * Math.PI);
+                    if (unit < 0) {
+                        unit += 1;
+                    }
+                    //分为110个小模块 1-110=>0.09 = 1分钟 因为精度原因 在原本的+2
+                    time = (int) (112 * (1 - unit));
+                    if (time > 110) {
+                        time = 1;
+                    } else if (time > 100) {
+                        time = 100;
+                    } else if (time == 0) {
+                        time = 1;
+                    }
+                    invalidate();
                 }
-                invalidate();
                 break;
             case MotionEvent.ACTION_UP:
+                if (inCenter) {
+                    mWaterDegress = 0;
+                    if (currentLightStatus) {
+                        light = lightClose;
+                        currentLightStatus = false;
+                    } else {
+                        light = lightOpen;
+                        currentLightStatus = true;
+                    }
+                    if (listener != null)
+                        listener.lightStatus(currentLightStatus);
+                    invalidate();
+                } else {
+                    if (listener != null)
+                        listener.getTime(time);
+                }
                 break;
         }
         return true;
+    }
+
+    public interface OnTimerListener {
+        void getTime(int ms);
+
+        void lightStatus(boolean isOpen);
+    }
+
+    private OnTimerListener listener;
+
+    public void setListener(OnTimerListener listener) {
+        this.listener = listener;
     }
 }
