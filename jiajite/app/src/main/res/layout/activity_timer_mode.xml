@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvSleep"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:gravity="center_vertical"
+        android:text="睡眠设置"
+        android:textSize="18dp" />
+
+    <com.project.jaijite.gui.SwitchButton
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tvSleep"
+        android:layout_alignBottom="@+id/tvSleep"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="40sp" />
+
+    <View
+        android:id="@+id/vSplitOne"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tvSleep"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/darkGray" />
+
+
+    <TextView
+        android:id="@+id/tvSleepTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/vSplitOne"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:drawableStart="@mipmap/ic_light_time"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:text="01分钟后关灯"
+        android:textSize="18sp" />
+
+
+    <TextView
+        android:id="@+id/tvTimerOpen"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@+id/tvSleepTime"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:gravity="center_vertical"
+        android:text="定时开灯"
+        android:textSize="18dp" />
+
+    <com.project.jaijite.gui.SwitchButton
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tvTimerOpen"
+        android:layout_alignBottom="@+id/tvTimerOpen"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="40sp" />
+
+    <View
+        android:id="@+id/vSplitTwo"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tvTimerOpen"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/darkGray" />
+
+
+    <TextView
+        android:id="@+id/tvTimerTimeOpen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/vSplitTwo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:drawableStart="@mipmap/ic_light_time"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:text="17时35分开灯"
+        android:textSize="18sp" />
+
+
+    <TextView
+        android:id="@+id/tvTimerClose"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@+id/tvTimerTimeOpen"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:gravity="center_vertical"
+        android:text="定时关灯"
+        android:textSize="18dp" />
+
+    <com.project.jaijite.gui.SwitchButton
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tvTimerClose"
+        android:layout_alignBottom="@+id/tvTimerClose"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="40sp" />
+
+    <View
+        android:id="@+id/vSplitThree"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tvTimerClose"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/darkGray" />
+
+
+    <TextView
+        android:id="@+id/tvTimerTimeClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/vSplitThree"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:drawableStart="@mipmap/ic_light_time"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:text="22时35分关灯"
+        android:textSize="18sp" />
+</RelativeLayout>

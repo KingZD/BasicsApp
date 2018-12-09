@@ -5,9 +5,63 @@
 
     <com.project.jaijite.gui.TimerPickerView
         android:id="@+id/tpTimer"
-        android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tpTimer"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_weight="1"
+            android:src="@mipmap/w1" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_weight="1"
+            android:src="@mipmap/w2" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_weight="1"
+            android:src="@mipmap/w3" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_weight="1"
+            android:src="@mipmap/w4" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_weight="1"
+            android:src="@mipmap/w5" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:layout_weight="1"
+            android:src="@mipmap/w6" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/ivColor"
@@ -15,6 +69,6 @@
         android:layout_height="40dp"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="20dp"
         android:src="@mipmap/ic_setting_right" />
 </RelativeLayout>

@@ -1,6 +1,7 @@
 package com.project.jaijite.fragment;
 
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import com.project.jaijite.entity.LightInfo;
 import com.project.jaijite.event.UpdateLightDataEvent;
 import com.project.jaijite.greendao.db.LightingDB;
 import com.project.jaijite.util.ToastUtils;
+import com.yanzhenjie.recyclerview.swipe.widget.DefaultItemDecoration;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -55,6 +57,8 @@ public class LightingFragment extends BaseFragment
         mAdapter = new LightingAdapter();
         mAdapter.setOnItemChildClickListener(this);
         rlList.setAdapter(mAdapter);
+        rlList.addItemDecoration(new DefaultItemDecoration(ContextCompat
+                .getColor(getActivity(), R.color.darkgray)));
         showLoading();
         showLocalData();
     }
@@ -146,6 +150,8 @@ public class LightingFragment extends BaseFragment
         try {
             final LightInfo lightInfo = mAdapter.getData().get(position);
             switch (view.getId()) {
+                case R.id.btAddLed:
+                    break;
                 case R.id.llBody:
                     Intent intent = new Intent(getActivity(), LightSettingActivity.class);
                     intent.putExtra(LightSettingActivity.PARAM, lightInfo);

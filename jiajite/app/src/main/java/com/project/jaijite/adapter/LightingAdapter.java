@@ -29,6 +29,7 @@ public class LightingAdapter extends BaseQuickAdapter<LightInfo, BaseViewHolder>
         helper.setText(R.id.timingCloseLedTv, closeLedTv);
         String delayLedTv = "延时关灯：" + (TextUtils.equals(light.getDelay(), "00") ? "关" : "开");
         helper.setText(R.id.delayCloseLedTv, delayLedTv);
+        helper.addOnClickListener(R.id.btAddLed);
         helper.addOnClickListener(R.id.btReName);
         helper.addOnClickListener(R.id.deleteBtn);
         helper.addOnClickListener(R.id.llBody);

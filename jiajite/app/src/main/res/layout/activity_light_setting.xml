@@ -7,6 +7,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:layout_marginStart="@dimen/dp_10"
+        android:layout_marginEnd="10dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -47,38 +49,41 @@
         android:id="@+id/flBody"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="@dimen/dp_10"
+        android:layout_marginEnd="10dp"
+        android:gravity="top"
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/ivScene"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:src="@mipmap/light_mode" />
 
         <ImageView
+            android:id="@+id/ivTimer"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:src="@mipmap/light_time" />
 
         <ImageView
+            android:id="@+id/ivMusic"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:src="@mipmap/light_music" />
 
         <ImageView
+            android:id="@+id/ivMicro"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:src="@mipmap/light_voice" />
     </LinearLayout>
