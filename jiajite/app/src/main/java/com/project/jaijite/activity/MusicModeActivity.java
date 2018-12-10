@@ -43,7 +43,10 @@ public class MusicModeActivity extends BaseTitleActivity {
     ProgressBar mProgressBar;
     @BindView(R.id.ivStart)
     ImageView ivStart;
-    int mPosition = 0;
+    @BindView(R.id.ivSwitch)
+    ImageView ivSwitch;
+    int mPosition = -1;
+    boolean isSingle = false;
 
     @Override
     public int getLayoutId() {
@@ -61,6 +64,7 @@ public class MusicModeActivity extends BaseTitleActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 mPosition = position;
                 AudioPlayerUtil.get().play(mPosition);
+                mAdapter.setPlayIndex(mPosition);
             }
         });
         rlList.setLayoutManager(new LinearLayoutManager(this));
@@ -88,13 +92,23 @@ public class MusicModeActivity extends BaseTitleActivity {
 
             @Override
             public void onPublish(int progress) {
-                if (mProgressBar != null)
+                if (mProgressBar != null) {
                     mProgressBar.setProgress(progress);
+                    if (mProgressBar.getMax() == progress) {
+                        if (ivStart != null)
+                            ivStart.setImageResource(R.mipmap.music_pause);
+                    }
+                }
             }
 
             @Override
             public void onBufferingUpdate(int percent) {
 
+            }
+
+            @Override
+            public void autoNext() {
+                nextMusic(false);
             }
         });
         initMusic();
@@ -102,24 +116,53 @@ public class MusicModeActivity extends BaseTitleActivity {
 
     @OnClick(R.id.ivSwitch)
     void switchMucin() {
-
+        if (!isSingle) {
+            isSingle = true;
+            ivSwitch.setImageResource(R.mipmap.play_single);
+        } else {
+            isSingle = false;
+            ivSwitch.setImageResource(R.mipmap.play_circle);
+        }
     }
 
     @OnClick(R.id.ivPrev)
     void prev() {
         AudioPlayerUtil.get().prev(mPosition);
         mPosition--;
+        if (mPosition < 0) {
+            mPosition = mAdapter.getData().size() - 1;
+        }
+        mAdapter.setPlayIndex(mPosition);
+        rlList.scrollToPosition(mPosition);
     }
 
     @OnClick(R.id.ivStart)
     void start() {
+        if (mPosition < 0)
+            mPosition = 0;
         AudioPlayerUtil.get().playPause(mPosition);
+        mAdapter.setPlayIndex(mPosition);
+        rlList.scrollToPosition(mPosition);
     }
 
     @OnClick(R.id.ivNext)
     void next() {
-        AudioPlayerUtil.get().next(mPosition);
-        mPosition++;
+        nextMusic(true);
+    }
+
+    private void nextMusic(boolean isMustNext) {
+        if (isSingle && !isMustNext) {
+            AudioPlayerUtil.get().play(mPosition);
+        } else {
+            AudioPlayerUtil.get().next(mPosition);
+            mPosition++;
+            if (mPosition >= mAdapter.getData().size()) {
+                mPosition = 0;
+            }
+            mAdapter.setPlayIndex(mPosition);
+            if (rlList != null)
+                rlList.scrollToPosition(mPosition);
+        }
     }
 
     @OnClick(R.id.ivLight)

@@ -61,6 +61,10 @@ public class AudioPlayerUtil {
             @Override
             public void onCompletion(MediaPlayer mp) {
 //                next(0);
+                for (OnPlayerEventListener listener : listeners) {
+                    if (state != STATE_PAUSE)
+                        listener.autoNext();
+                }
             }
         });
 

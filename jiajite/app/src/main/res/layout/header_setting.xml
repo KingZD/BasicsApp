@@ -9,28 +9,28 @@
     <TextView
         android:id="@+id/tvDesc"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
         android:drawableRight="@mipmap/ic_right_arrow1"
         android:gravity="center|start"
         android:text="功能介绍"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textStyle="bold" />
 
     <View
         android:id="@+id/vSplit"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         android:layout_below="@+id/tvDesc"
         android:background="@color/darkgray" />
 
     <TextView
         android:id="@+id/tvTouch"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
         android:layout_below="@+id/vSplit"
         android:gravity="center|start"
         android:text="触摸震动"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textStyle="bold" />
 
     <com.project.jaijite.gui.SwitchButton
@@ -47,25 +47,25 @@
     <View
         android:id="@+id/vSplit_"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         android:layout_below="@+id/tvTouch"
         android:background="@color/darkgray" />
 
     <TextView
         android:id="@+id/tvAdd"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
         android:layout_below="@+id/vSplit_"
         android:drawableRight="@mipmap/ic_right_arrow1"
         android:gravity="center|start"
         android:text="添加设备"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textStyle="bold" />
 
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         android:layout_below="@+id/tvAdd"
         android:background="@color/darkgray" />
 </merge>

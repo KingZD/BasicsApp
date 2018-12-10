@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.project.jaijite.R;
 import com.project.jaijite.dialog.LoadingDialog;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -135,6 +137,7 @@ public abstract class BaseTitleActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         dismissLoading();
         if (bind != null)
             bind.unbind();

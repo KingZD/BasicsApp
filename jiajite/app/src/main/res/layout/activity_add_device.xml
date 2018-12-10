@@ -17,7 +17,9 @@
             android:layout_height="50dp"
             android:background="@drawable/input_bg"
             android:hint="请输入名称"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:singleLine="true"
+            android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/etPwd"
@@ -26,7 +28,9 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/input_bg"
             android:hint="请输入密码"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:singleLine="true"
+            android:textColor="@color/black" />
 
         <ImageView
             android:layout_width="match_parent"

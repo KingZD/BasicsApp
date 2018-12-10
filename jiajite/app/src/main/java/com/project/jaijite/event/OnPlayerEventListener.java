@@ -32,4 +32,6 @@ public interface OnPlayerEventListener {
      * 缓冲百分比
      */
     void onBufferingUpdate(int percent);
+    //自动下一曲
+    void autoNext();
 }

@@ -14,4 +14,5 @@ public class KittApplication extends Application {
     public static KittApplication getApplication() {
         return application;
     }
+
 }

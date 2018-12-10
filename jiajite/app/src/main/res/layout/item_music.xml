@@ -3,23 +3,36 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/ivIcon"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+    <FrameLayout
+        android:id="@+id/fl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:src="@mipmap/music_playing" />
+        android:layout_marginTop="20dp">
+
+        <ImageView
+            android:id="@+id/ivIcon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@mipmap/music_playing" />
+
+        <TextView
+            android:id="@+id/tvIndex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textSize="16sp" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/tvMusicName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/ivIcon"
         android:layout_marginStart="10dp"
-        android:layout_toEndOf="@+id/ivIcon"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@+id/fl"
         android:text="Ak我的"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
 
     <ImageView
         android:id="@+id/ivTip"
@@ -27,7 +40,7 @@
         android:layout_height="20dp"
         android:layout_below="@+id/tvMusicName"
         android:layout_alignLeft="@+id/tvMusicName"
-        android:layout_toEndOf="@+id/ivIcon"
+        android:layout_toEndOf="@+id/fl"
         android:src="@mipmap/music_ok" />
 
     <TextView
@@ -62,8 +75,9 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         android:layout_below="@+id/tvAuthor"
+        android:layout_alignLeft="@+id/tvMusicName"
         android:layout_marginTop="10dp"
         android:background="@color/darkGray" />
 </RelativeLayout>

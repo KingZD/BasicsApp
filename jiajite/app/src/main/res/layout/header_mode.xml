@@ -82,7 +82,7 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/ic_qs" />
+            android:src="@mipmap/ic_cd" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -109,7 +109,7 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/w5" />
+            android:src="@mipmap/ic_bd" />
 
         <TextView
             android:layout_width="wrap_content"

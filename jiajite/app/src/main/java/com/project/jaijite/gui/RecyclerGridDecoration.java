@@ -48,7 +48,7 @@ public class RecyclerGridDecoration extends RecyclerView.ItemDecoration {
         paint.setColor(mContext.getResources().getColor(R.color.color_title));
         //设置画笔的宽度，这里的宽度需要和getItemOffsets()方法中的
         //left、top、right、bottom值的关系处理好，否则显示的效果会不理想
-        int dp = ScreenUtils.dip2px(mContext, 2f);
+        int dp = ScreenUtils.dip2px(mContext, 1f);
         paint.setStrokeWidth(dp);
         //获得RecyclerView中总条目数量
         int childCount = parent.getChildCount();

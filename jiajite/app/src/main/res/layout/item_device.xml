@@ -21,7 +21,7 @@
             android:paddingRight="10dip"
             android:text="重命名"
             android:textColor="@color/color_white"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/deleteBtn"
@@ -32,12 +32,12 @@
             android:paddingRight="10dip"
             android:text="删除"
             android:textColor="@color/color_white"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="40dp">
 
         <TextView
             android:id="@+id/tvTitle"
@@ -45,7 +45,7 @@
             android:layout_height="match_parent"
             android:gravity="center|start"
             android:text="title"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <com.project.jaijite.gui.SwitchButton
