@@ -1,6 +1,7 @@
 package com.project.jaijite.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.os.Handler;
@@ -19,6 +20,7 @@ import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -35,6 +37,7 @@ public class MicroModeActivity extends BaseTitleActivity implements Runnable {
     private boolean isAlive = true;
     private boolean isAllowDrawWave = false;
 
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -63,19 +66,45 @@ public class MicroModeActivity extends BaseTitleActivity implements Runnable {
     public void initView() {
         lightInfo = (LightInfo) getIntent().getSerializableExtra(PARAM);
         setTvTitle("麦克风模式");
-        setTitleLeft(lightInfo.getName());
-        Disposable subscribe = new RxPermissions(this)
-                .request(Manifest.permission.RECORD_AUDIO)
+        if (lightInfo != null)
+            setTitleLeft(lightInfo.getName());
+        final RxPermissions rxPermissions = new RxPermissions(this);
+        rxPermissions
+                .request(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Boolean>() {
+                .subscribe(new Observer<Boolean>() {
                     @Override
-                    public void accept(Boolean aBoolean) throws Exception {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if (!rxPermissions.isGranted(Manifest.permission.RECORD_AUDIO)) {
+                            ToastUtils.showShortSafe("缺少录音权限");
+                            return;
+                        }
+
+                        if (!rxPermissions.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                            ToastUtils.showShortSafe("缺少读写权限");
+                            return;
+                        }
                         if (aBoolean) {
                             initAudio();
                         } else {
                             ToastUtils.showShort("申请权限失败");
                         }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtils.showShort("初始化麦克风失败:" + e.getLocalizedMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }
@@ -122,7 +151,8 @@ public class MicroModeActivity extends BaseTitleActivity implements Runnable {
     @Override
     protected void onDestroy() {
         isAlive = false;
-        mMediaRecorder.release();
+        if (mMediaRecorder != null)
+            mMediaRecorder.release();
         mMediaRecorder = null;
         super.onDestroy();
     }

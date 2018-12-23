@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/logroup1"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/led_group_selector"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:src="@mipmap/icon_groupnew_hand" />
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/group_a_select" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/darkGray" />
+
+    <RelativeLayout
+        android:id="@+id/logroup2"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/led_group_selector"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:src="@mipmap/icon_groupnew_hand" />
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/group_b_select" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/darkGray" />
+
+    <RelativeLayout
+        android:id="@+id/logroup3"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/led_group_selector"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:src="@mipmap/icon_groupnew_hand" />
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/group_c_select" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/darkGray" />
+
+    <RelativeLayout
+        android:id="@+id/logroup4"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/led_group_selector"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:src="@mipmap/icon_groupnew_hand" />
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/group_d_select" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/darkGray" />
+</LinearLayout>

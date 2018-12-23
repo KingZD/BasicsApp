@@ -35,7 +35,7 @@
 
     <com.project.jaijite.gui.SwitchButton
         android:id="@+id/sbTouch"
-        android:layout_width="85dp"
+        android:layout_width="60dp"
         android:layout_height="match_parent"
         android:layout_alignTop="@+id/tvTouch"
         android:layout_alignBottom="@+id/tvTouch"
@@ -64,8 +64,29 @@
 
 
     <View
+        android:id="@+id/vSplit__"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_below="@+id/tvAdd"
         android:background="@color/darkgray" />
+
+    <TextView
+        android:id="@+id/tvLogout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/vSplit__"
+        android:drawableRight="@mipmap/ic_right_arrow1"
+        android:gravity="center|start"
+        android:text="退出"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/tvLogout"
+        android:background="@color/darkgray"
+        android:visibility="gone" />
 </merge>

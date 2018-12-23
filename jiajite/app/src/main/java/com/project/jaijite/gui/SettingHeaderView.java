@@ -55,6 +55,11 @@ public class SettingHeaderView extends RelativeLayout {
         mListener.addDevice();
     }
 
+    @OnClick(R.id.tvLogout)
+    void logout() {
+        mListener.logout();
+    }
+
     public void onDstory() {
         if (bind != null)
             bind.unbind();
@@ -66,6 +71,8 @@ public class SettingHeaderView extends RelativeLayout {
         void touch(SwitchButton view, boolean isChecked);
 
         void addDevice();
+
+        void logout();
     }
 
     private OnHeaderListener mListener;

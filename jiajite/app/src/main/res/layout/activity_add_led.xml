@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:background="@mipmap/add_led_bg"
+        android:gravity="center_vertical"
+        android:paddingLeft="80dp"
+        android:paddingRight="80dp">
+
+        <ImageView
+            android:id="@+id/ivScan"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/scan" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivScan"
+            android:layout_alignLeft="@+id/ivScan"
+            android:layout_alignRight="@+id/ivScan"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="扫一扫"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/ivAddLed"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/add_led" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivAddLed"
+            android:layout_alignLeft="@+id/ivAddLed"
+            android:layout_alignRight="@+id/ivAddLed"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="添加灯"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rlList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none" />
+</LinearLayout>

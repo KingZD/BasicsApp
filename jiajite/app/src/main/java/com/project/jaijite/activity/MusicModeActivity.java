@@ -172,51 +172,68 @@ public class MusicModeActivity extends BaseTitleActivity {
 
     private void initMusic() {
         showLoading();
-        Disposable subscribe = new RxPermissions(this)
-                .request(Manifest.permission.READ_EXTERNAL_STORAGE)
+        new RxPermissions(this)
+                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Boolean>() {
+                .subscribe(new Observer<Boolean>() {
                     @Override
-                    public void accept(Boolean aBoolean) throws Exception {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
                         if (aBoolean) {
                             Observable
                                     .create(new ObservableOnSubscribe<List<MusicInfo>>() {
                                         @Override
-                                        public void subscribe(ObservableEmitter<List<MusicInfo>> emitter) throws Exception {
+                                        public void subscribe(ObservableEmitter<List<MusicInfo>> emitter) {
                                             emitter.onNext(MusicUtil.getMusicData(MusicModeActivity.this));
                                         }
                                     })
                                     .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<MusicInfo>>() {
-                                @Override
-                                public void onSubscribe(Disposable d) {
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new Observer<List<MusicInfo>>() {
+                                        @Override
+                                        public void onSubscribe(Disposable d) {
 
-                                }
+                                        }
 
-                                @Override
-                                public void onNext(List<MusicInfo> o) {
-                                    MusicDB.clearMusic();
-                                    MusicDB.addAllMusic(o);
-                                    mAdapter.replaceData(o);
-                                    hideLoading();
-                                }
+                                        @Override
+                                        public void onNext(List<MusicInfo> o) {
+                                            MusicDB.clearMusic();
+                                            MusicDB.addAllMusic(o);
+                                            AudioPlayerUtil.get().setMusicList(o);
+                                            mAdapter.replaceData(o);
+                                            hideLoading();
+                                        }
 
-                                @Override
-                                public void onError(Throwable e) {
-                                    ToastUtils.showShort(e.getMessage());
-                                    hideLoading();
-                                }
+                                        @Override
+                                        public void onError(Throwable e) {
+                                            ToastUtils.showShort(e.getMessage());
+                                            hideLoading();
+                                        }
 
-                                @Override
-                                public void onComplete() {
-                                    hideLoading();
-                                }
-                            });
+                                        @Override
+                                        public void onComplete() {
+                                            hideLoading();
+                                        }
+                                    });
                         } else {
                             ToastUtils.showShort("申请权限失败");
                             hideLoading();
                         }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtils.showShort("申请权限失败");
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onComplete() {
 
                     }
                 });

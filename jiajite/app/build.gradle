@@ -2,36 +2,95 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
 
 android {
-    compileSdkVersion 28
-    defaultConfig {
-        applicationId "com.project.jaijite"
-        minSdkVersion 17
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
-    buildTypes {
+    signingConfigs {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            storeFile file('jjt.jks')
+            keyAlias 'jjt'
+            keyPassword '123456'
+            storePassword '123456'
+            //v1和v2的签名使用
+//            只勾选v1签名并不会影响什么，但是在7.0上不会使用更安全的验证方式
+//            只勾选V2签名7.0以下会直接安装完显示未安装，7.0以上则使用了V2的方式验证
+            v1SigningEnabled true
+            v2SigningEnabled true
         }
     }
 
-    greendao{
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.project.jaijite"
+        minSdkVersion 18
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0.1"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        //兼容Gradle3.X
+        ndk {
+            abiFilters "armeabi", "x86"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            // 签名
+            signingConfig signingConfigs.release
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // 是否开启apk zip优化
+            zipAlignEnabled true
+            manifestPlaceholders = [DEBUG: false]
+        }
+        debug {
+            // DEBUG 签名
+            signingConfig signingConfigs.release
+            manifestPlaceholders = [DEBUG: true]
+        }
+    }
+
+    greendao {
         schemaVersion 2 // 数据库版本号
-        daoPackage  'com.project.jaijite.greendao.dao'//greenDao 自动生成的代码保存的包名
-        targetGenDir   'src/main/java' //自动生成的代码存储的路径，默认是 build/generated/source/greendao.
+        daoPackage 'com.project.jaijite.greendao.dao'//greenDao 自动生成的代码保存的包名
+        targetGenDir 'src/main/java' //自动生成的代码存储的路径，默认是 build/generated/source/greendao.
         generateTests false //true的时候自动生成测试单元
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            String fileName = "jijiate_" + buildType.name + "_1.0.1.apk"
+            println "fileName:" + fileName
+            outputFileName = fileName
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
+
+    ext {
+        supportlib_version = '26.1.0'
+    }
+
+    subprojects {
+        project.configurations.all {
+            resolutionStrategy.eachDependency { details ->
+                if (details.requested.group == 'com.android.support'
+                        && !details.requested.name.contains('multidex')) {
+                    details.useVersion "$supportlib_version"
+                }
+            }
+        }
     }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'com.android.support:multidex:1.0.1'
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'org.greenrobot:greendao:3.2.2'
@@ -48,4 +107,31 @@ dependencies {
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
     // AWS配网版本
     implementation 'io.fogcloud.sdk:easylinkv3:0.2.6'
+    /*添加依赖*/
+    implementation 'com.github.yuzhiqiang1993:zxing:2.2.4'
+
+    implementation 'com.aliyun.iot.aep.sdk:account-oa:0.0.3.9'
+    implementation 'com.aliyun.ams:alicloud-android-utdid:1.1.5.4'
+    implementation 'com.aliyun.ams:alicloud-android-ut:5.1.0'
+    implementation 'com.aliyun.iot.aep.sdk:apiclient:0.0.3.1'
+    implementation 'com.aliyun.iot.aep.sdk:account:0.0.2.3'
+    implementation 'com.aliyun.iot.aep.sdk:iot-credential:0.0.2'
+    implementation 'com.aliyun.alink.linksdk:lpbs-plugin-breeze:1.0.1'
+    implementation 'com.aliyun.alink.linksdk:breeze-biz:1.0.2'
+    implementation 'com.aliyun.alink.linksdk:breeze:1.2.1.1'
+    implementation 'com.aliyun.alink.linksdk:ble-library:1.2.1.2'
+    implementation 'com.aliyun.iot.aep.page:rn:0.1.1'
+    implementation 'com.aliyun.iot.aep.sdk:rn-external-fresco:0.41.2.20180331'
+    implementation 'com.aliyun.alink.linksdk:public-channel-gateway:1.2.0'
+    implementation 'com.aliyun.alink.linksdk:ilop-devicecenter:1.3.0'
+    implementation 'com.aliyun.alink.linksdk:ilop-devicecenter-ext-boneplugin:1.3.0'
+    implementation 'com.aliyun.alink.linksdk:public-tmp-ext-boneplugin:1.3.5.1'
+    implementation 'com.aliyun.iot.aep.sdk:connectchannel:0.0.2.1'
+
+    implementation 'com.tencent.bugly:crashreport:latest.release'
+    //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+    //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版
+
+    implementation project(':easyLink_31_FTC_Service')
 }

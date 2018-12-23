@@ -17,10 +17,10 @@
         android:background="@color/darkGray" />
 
     <android.support.v7.widget.RecyclerView
-        android:layout_weight="1"
         android:id="@+id/rlList"
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,7 +45,6 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:background="@drawable/red_bg"
-                    android:padding="10dp"
                     android:src="@mipmap/play_circle" />
             </FrameLayout>
 
@@ -60,7 +59,6 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:background="@drawable/red_bg"
-                    android:padding="10dp"
                     android:src="@mipmap/music_prev" />
             </FrameLayout>
 
@@ -70,11 +68,11 @@
                 android:layout_weight="1">
 
                 <ImageView
-                    android:padding="3dp"
                     android:id="@+id/ivStart"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_gravity="center"
+                    android:padding="3dp"
                     android:src="@mipmap/music_pause" />
             </FrameLayout>
 
@@ -89,7 +87,6 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:background="@drawable/red_bg"
-                    android:padding="10dp"
                     android:src="@mipmap/music_next" />
             </FrameLayout>
 
@@ -104,8 +101,7 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:background="@drawable/red_bg"
-                    android:padding="10dp"
-                    android:src="@mipmap/ic_light_white" />
+                    android:src="@mipmap/music_on" />
             </FrameLayout>
         </LinearLayout>
 

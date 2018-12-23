@@ -43,9 +43,14 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected void showLoading() {
+        showLoading("");
+    }
+
+    protected void showLoading(String content) {
         if (loadingDialog == null) {
             loadingDialog = new LoadingDialog(getActivity());
         }
+        loadingDialog.setContent(content);
         loadingDialog.show();
     }
 
@@ -55,7 +60,7 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    private void dismissLoading(){
+    private void dismissLoading() {
         if (loadingDialog != null) {
             loadingDialog.dismiss();
             loadingDialog = null;

@@ -13,16 +13,14 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/mode_bg"
-            android:padding="5dp"
-            android:src="@mipmap/light" />
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@mipmap/music_on" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:gravity="center"
             android:text="单灯模式" />
     </LinearLayout>
@@ -46,21 +44,16 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:src="@mipmap/light_more" />
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/mode_bg"
-                android:padding="5dp" />
         </FrameLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="5dp"
             android:gravity="center"
             android:text="多灯模式" />
     </LinearLayout>
@@ -80,14 +73,14 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:src="@mipmap/ic_cd" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginTop="5dp"
             android:gravity="center"
             android:text="彩灯模式" />
     </LinearLayout>
@@ -107,14 +100,14 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:src="@mipmap/ic_bd" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginTop="5dp"
             android:gravity="center"
             android:text="白灯模式" />
     </LinearLayout>

@@ -42,6 +42,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initView() {
+
         select(R.id.rbLight);
         Disposable subscribe = new RxPermissions(this)
                 .request(Manifest.permission.ACCESS_WIFI_STATE)

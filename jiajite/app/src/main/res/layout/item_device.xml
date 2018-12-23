@@ -10,7 +10,7 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_height="40dp">
 
         <Button
             android:id="@+id/btReName"
@@ -49,15 +49,16 @@
             android:textStyle="bold" />
 
         <com.project.jaijite.gui.SwitchButton
-            swipe:sb_checked="true"
-            android:layout_width="85dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+            android:layout_margin="5dp"
+            swipe:sb_checked="true" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="0.5dp"
             android:layout_alignParentBottom="true"
             android:background="@color/darkgray" />
     </RelativeLayout>

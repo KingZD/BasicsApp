@@ -54,5 +54,23 @@
 
     </style>
 
+    <style name="SystemWindowsStyle">
+        <item name="android:background">@color/lightBlue</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:clipToPadding">false</item>
+    </style>
 
+    <!--对话框样式-->
+    <style name="window_background" parent="android:Theme.Holo.Light.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+
+    </style>
+
+
+    <style name="AppStartTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/view_splash</item>
+    </style>
 </resources>

@@ -40,6 +40,11 @@ public class LightSettingActivity extends BaseTitleActivity {
         finish();
     }
 
+    @OnClick(R.id.btRight)
+    void addLight() {
+        startActivity(new Intent(this, AddLedActivity.class));
+    }
+
     @OnClick(R.id.ivMusic)
     void showMusic() {
         Intent intent = new Intent(this, MusicModeActivity.class);

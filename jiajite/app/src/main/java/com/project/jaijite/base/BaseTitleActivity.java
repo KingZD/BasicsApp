@@ -1,5 +1,6 @@
 package com.project.jaijite.base;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -38,10 +39,10 @@ public abstract class BaseTitleActivity extends AppCompatActivity {
         //添加新主体容器
         View contentView = LayoutInflater.from(this).inflate(getLayoutId(), null);
         rootView.addView(contentView);
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)contentView.getLayoutParams();
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) contentView.getLayoutParams();
         layoutParams.weight = 1;
         //绑定ui
-        bind = ButterKnife.bind(this,rootView);
+        bind = ButterKnife.bind(this, rootView);
         initView();
     }
 
@@ -52,7 +53,7 @@ public abstract class BaseTitleActivity extends AppCompatActivity {
     /**
      * 设置左标题
      *
-     * @param word  文字
+     * @param word 文字
      */
     protected void setTitleLeft(String word) {
         if (btLeft != null) {
@@ -89,7 +90,7 @@ public abstract class BaseTitleActivity extends AppCompatActivity {
     /**
      * 设置右标题
      *
-     * @param word  文字
+     * @param word 文字
      */
     protected void setTitleRight(String word) {
         if (btRight != null) {
@@ -115,9 +116,20 @@ public abstract class BaseTitleActivity extends AppCompatActivity {
     }
 
     protected void showLoading() {
+        showLoading("");
+    }
+
+    protected void showLoading(String content) {
+        showLoading(content, null);
+    }
+
+    protected void showLoading(String content, DialogInterface.OnCancelListener cancelListener) {
         if (loadingDialog == null) {
             loadingDialog = new LoadingDialog(this);
         }
+        if (cancelListener != null)
+            loadingDialog.setOnCancelListener(cancelListener);
+        loadingDialog.setContent(content);
         loadingDialog.show();
     }
 
@@ -127,7 +139,7 @@ public abstract class BaseTitleActivity extends AppCompatActivity {
         }
     }
 
-    private void dismissLoading(){
+    private void dismissLoading() {
         if (loadingDialog != null) {
             loadingDialog.dismiss();
             loadingDialog = null;

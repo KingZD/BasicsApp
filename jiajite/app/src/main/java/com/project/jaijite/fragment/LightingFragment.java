@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.project.jaijite.R;
+import com.project.jaijite.activity.AddLedActivity;
 import com.project.jaijite.activity.AddLightActivity;
 import com.project.jaijite.activity.LightSettingActivity;
 import com.project.jaijite.adapter.LightingAdapter;
@@ -150,7 +151,10 @@ public class LightingFragment extends BaseFragment
         try {
             final LightInfo lightInfo = mAdapter.getData().get(position);
             switch (view.getId()) {
+                case R.id.ledPowerBtn:
+                    break;
                 case R.id.btAddLed:
+                    startActivity(new Intent(getActivity(),AddLedActivity.class));
                     break;
                 case R.id.llBody:
                     Intent intent = new Intent(getActivity(), LightSettingActivity.class);

@@ -62,4 +62,11 @@
     <string name="deleteLedPrompt">确定删除该灯？</string>
     <string name="mac_hint">MAC地址通常在以下地方显示：\n1，系统设置—WLAN—高级设置—MAC地址；\n2，系统设置—关于手机—状态信息—WLAN MAC地址。\n提示：只需填写字母和英文部分。例：E005C54DF500</string>
 
+
+    <string name="account_choose_register_style">请选择您要注册的账号类型</string>
+    <string name="account_choose_find_pwd_style">请选择找回密码的方式</string>
+    <string name="account_choose_find_pwd_style_phone">手机找回</string>
+    <string name="account_choose_find_pwd_style_email">邮箱找回</string>
+    <string name="account_phone_register">手机注册</string>
+    <string name="account_cancel">取消</string>
 </resources>

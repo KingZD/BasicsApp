@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
+import com.aliyun.iot.aep.sdk.login.ILogoutCallback;
+import com.aliyun.iot.aep.sdk.login.LoginBusiness;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.project.jaijite.R;
 import com.project.jaijite.activity.AddDeviceActivity;
@@ -27,6 +29,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class SettingFragment extends BaseFragment
         implements SettingHeaderView.OnHeaderListener,
@@ -46,6 +49,7 @@ public class SettingFragment extends BaseFragment
         EventBus.getDefault().register(this);
         setTitleLeft("", -1);
         setTvTitle("设置");
+        setTitleRight("退出", -1);
         mAdapter = new DeviceAdapter();
         rlList.setLayoutManager(new LinearLayoutManager(getActivity()));
         rlList.setAdapter(mAdapter);
@@ -78,7 +82,7 @@ public class SettingFragment extends BaseFragment
                                         ToastUtils.showShort("名称不能为空！");
                                     }
                                     deviceInfo.setName(et.getText().toString());
-                                    DeviceDB.updateLight(deviceInfo);
+                                    DeviceDB.updateOrInsert(deviceInfo);
                                     adapter.notifyDataSetChanged();
                                 }
                             })
@@ -94,7 +98,7 @@ public class SettingFragment extends BaseFragment
                                 public void onClick(View v, TipsDialog dialog) {
                                     mAdapter.getData().remove(position);
                                     DeviceDB.delLight(deviceInfo);
-                                    mAdapter.notifyItemRemoved(position+1);
+                                    mAdapter.notifyItemRemoved(position + 1);
                                 }
                             })
                             .show();
@@ -125,6 +129,31 @@ public class SettingFragment extends BaseFragment
     @Override
     public void addDevice() {
         startActivity(new Intent(getActivity(), AddDeviceActivity.class));
+    }
+
+
+    @OnClick(R.id.btRight)
+    void logOut() {
+        logout();
+    }
+
+    @Override
+    public void logout() {
+        showLoading("正在退出");
+        LoginBusiness.logout(new ILogoutCallback() {
+            @Override
+            public void onLogoutSuccess() {
+                hideLoading();
+                ToastUtils.showShort("登出成功");
+                getActivity().finish();
+            }
+
+            @Override
+            public void onLogoutFailed(int code, String error) {
+                hideLoading();
+                ToastUtils.showShort("登出失败" + error);
+            }
+        });
     }
 
     @Override

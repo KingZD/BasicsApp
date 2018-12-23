@@ -1,12 +1,10 @@
 package com.project.jaijite.adapter;
 
-import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.project.jaijite.R;
 import com.project.jaijite.bean.SceneBean;
-import com.squareup.picasso.Picasso;
 
 public class SceneAdapter extends BaseQuickAdapter<SceneBean, BaseViewHolder> {
 

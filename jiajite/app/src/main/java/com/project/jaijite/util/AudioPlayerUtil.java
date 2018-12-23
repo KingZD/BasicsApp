@@ -260,6 +260,10 @@ public class AudioPlayerUtil {
         return musicList;
     }
 
+    public void setMusicList(List<MusicInfo> musicList) {
+        this.musicList = musicList;
+    }
+
     public boolean isPlaying() {
         return state == STATE_PLAYING;
     }
