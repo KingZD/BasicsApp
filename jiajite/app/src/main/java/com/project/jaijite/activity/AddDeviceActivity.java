@@ -222,19 +222,19 @@ public class AddDeviceActivity extends BaseTitleActivity {
             ServiceInfo sInfo = jmdns.getServiceInfo("_easylink._tcp.local.",
                     event.getName());
             if (null != sInfo) {
-                stopScan();
                 //添加设备
+
 
                 Log.i("====", "serviceInfo:" + sInfo.getTextString());
                 Log.i("====",
                         "Name:" + sInfo.getName() + "Service:"
                                 + sInfo.getType() + "IP:" + sInfo.getAddress()
                                 + "port:" + sInfo.getPort()
-                                + "Mac:" + sInfo.getPriority());
+                                + "Mac:" + sInfo.getTextString());
                 ToastUtils.showShortSafe("发现设备 <<<Name:" + sInfo.getName() + "Service:"
                         + sInfo.getType() + "IP:" + sInfo.getAddress()
                         + "port:" + sInfo.getPort()
-                        + "Mac:" + sInfo.getPriority() + ">>>");
+                        + "Mac:" + sInfo.getTextString() + ">>>");
             }
         }
 
