@@ -16,9 +16,12 @@ import android.view.View;
 import com.project.jaijite.R;
 import com.project.jaijite.base.BaseActivity;
 import com.project.jaijite.base.BaseFragment;
+import com.project.jaijite.entity.DeviceInfo;
 import com.project.jaijite.event.WifiStatusEvent;
 import com.project.jaijite.fragment.LightingFragment;
 import com.project.jaijite.fragment.SettingFragment;
+import com.project.jaijite.greendao.db.DeviceDB;
+import com.project.jaijite.util.EasyLinkTXTRecordUtil;
 import com.project.jaijite.util.ToastUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 

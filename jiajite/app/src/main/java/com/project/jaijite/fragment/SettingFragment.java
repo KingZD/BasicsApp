@@ -21,12 +21,15 @@ import com.project.jaijite.event.UpdateDeviceDataEvent;
 import com.project.jaijite.greendao.db.DeviceDB;
 import com.project.jaijite.gui.SettingHeaderView;
 import com.project.jaijite.gui.SwitchButton;
+import com.project.jaijite.util.SPUtils;
 import com.project.jaijite.util.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -81,12 +84,12 @@ public class SettingFragment extends BaseFragment
                                     if (TextUtils.isEmpty(et.getText().toString())) {
                                         ToastUtils.showShort("名称不能为空！");
                                     }
-                                    deviceInfo.setName(et.getText().toString());
+                                    deviceInfo.setShowName(et.getText().toString());
                                     DeviceDB.updateOrInsert(deviceInfo);
                                     adapter.notifyDataSetChanged();
                                 }
                             })
-                            .setText(R.id.etContent, deviceInfo.getName())
+                            .setText(R.id.etContent, deviceInfo.getShowName())
                             .show();
                     break;
                 case R.id.deleteBtn:
@@ -101,6 +104,7 @@ public class SettingFragment extends BaseFragment
                                     mAdapter.notifyItemRemoved(position + 1);
                                 }
                             })
+                            .setText(R.id.contentTv, "确定删除设备？")
                             .show();
                     break;
             }
@@ -124,6 +128,7 @@ public class SettingFragment extends BaseFragment
 
     @Override
     public void touch(SwitchButton view, boolean isChecked) {
+        SPUtils.getInstance().put("touchShake", isChecked);
     }
 
     @Override

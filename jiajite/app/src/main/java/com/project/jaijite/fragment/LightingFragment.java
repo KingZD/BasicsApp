@@ -1,5 +1,6 @@
 package com.project.jaijite.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
+import com.alibaba.fastjson.JSON;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.project.jaijite.R;
 import com.project.jaijite.activity.AddLedActivity;
@@ -15,16 +17,25 @@ import com.project.jaijite.activity.AddLightActivity;
 import com.project.jaijite.activity.LightSettingActivity;
 import com.project.jaijite.adapter.LightingAdapter;
 import com.project.jaijite.base.BaseFragment;
+import com.project.jaijite.bean.Info;
+import com.project.jaijite.bean.Task;
 import com.project.jaijite.dialog.TipsDialog;
+import com.project.jaijite.entity.DeviceInfo;
 import com.project.jaijite.entity.LightInfo;
 import com.project.jaijite.event.UpdateLightDataEvent;
+import com.project.jaijite.greendao.db.DeviceDB;
 import com.project.jaijite.greendao.db.LightingDB;
+import com.project.jaijite.service.MainService;
+import com.project.jaijite.util.EasyLinkUtil;
+import com.project.jaijite.util.SPUtils;
 import com.project.jaijite.util.ToastUtils;
 import com.yanzhenjie.recyclerview.swipe.widget.DefaultItemDecoration;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.net.Socket;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -118,7 +129,9 @@ public class LightingFragment extends BaseFragment
 
     //初始化灯的数据
     private void initLightData() {
-        if (LightingDB.isEmpty()) {
+        boolean add = SPUtils.getInstance().getBoolean("add", false);
+        if (!add) {
+            LightingDB.clear();
             LightingDB.insertLightData("大厅灯");
             LightingDB.insertLightData("小厅灯");
             LightingDB.insertLightData("餐厅灯");
@@ -143,6 +156,7 @@ public class LightingFragment extends BaseFragment
             LightingDB.insertLightData("天花灯");
             LightingDB.insertLightData("水晶灯");
             LightingDB.insertLightData("蜡烛灯");
+            SPUtils.getInstance().put("add", true);
         }
     }
 
@@ -152,9 +166,59 @@ public class LightingFragment extends BaseFragment
             final LightInfo lightInfo = mAdapter.getData().get(position);
             switch (view.getId()) {
                 case R.id.ledPowerBtn:
+                    showLoading("设备连接中", new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            ToastUtils.showShortSafe("连接已取消");
+                            EasyLinkUtil.stopScan();
+                        }
+                    });
+                    EasyLinkUtil.getDeviceInfoByDefaultMac(new EasyLinkUtil.ScanReadyDeviceListener() {
+                        @Override
+                        public void getReadyDeviceInfo(DeviceInfo deviceInfo) {
+                            hideLoading();
+                            //设置地址
+                            Info.SERVER_ADDR = deviceInfo.getIp();
+                            Info.PORT = deviceInfo.getPort();
+                            Task task = new Task();
+                            task.setMac(deviceInfo.getMac());
+                            task.setId(lightInfo.getId());
+                            task.setLedID(String.valueOf(lightInfo.getId()));
+                            task.setFunction(lightInfo.getIsCheck() ? Info.TURN_ON : Info.TURN_OFF);
+                            task.setAttribute(String.valueOf(lightInfo.getIsCheck() ? Info.ON : Info.OFF));
+                            MainService.newTask(task, true);
+
+                            lightInfo.setLed_state(lightInfo.getIsCheck() ? Info.TURN_ON : Info.TURN_OFF);
+                            lightInfo.setIsCheck(!lightInfo.getIsCheck());
+                            LightingDB.updateLight(lightInfo);
+                            mAdapter.notifyItemChanged(position);
+                            ToastUtils.showShortSafe("发送指令成功：".concat(JSON.toJSONString(deviceInfo)));
+                        }
+
+                        @Override
+                        public void timeout() {
+                            hideLoading();
+                            EasyLinkUtil.stopScan();
+                            ToastUtils.showShortSafe("连接超时");
+                        }
+
+                        @Override
+                        public void notHaveOpenDevice() {
+                            hideLoading();
+                            EasyLinkUtil.stopScan();
+                            ToastUtils.showShortSafe("请至少开启一个在线设备");
+                        }
+
+                        @Override
+                        public void error(String msg) {
+                            hideLoading();
+                            EasyLinkUtil.stopScan();
+                            ToastUtils.showShortSafe(msg);
+                        }
+                    }, 5);//每1s获取一次 10次就是10s
                     break;
                 case R.id.btAddLed:
-                    startActivity(new Intent(getActivity(),AddLedActivity.class));
+                    startActivity(new Intent(getActivity(), AddLedActivity.class));
                     break;
                 case R.id.llBody:
                     Intent intent = new Intent(getActivity(), LightSettingActivity.class);

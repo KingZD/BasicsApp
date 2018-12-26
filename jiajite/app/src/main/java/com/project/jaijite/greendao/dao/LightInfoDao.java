@@ -40,6 +40,7 @@ public class LightInfoDao extends AbstractDao<LightInfo, Long> {
         public final static Property Led_state = new Property(13, int.class, "led_state", false, "LED_STATE");
         public final static Property Night_lamp_state = new Property(14, int.class, "night_lamp_state", false, "NIGHT_LAMP_STATE");
         public final static Property IsDelete = new Property(15, int.class, "isDelete", false, "IS_DELETE");
+        public final static Property IsCheck = new Property(16, Boolean.class, "isCheck", false, "IS_CHECK");
     }
 
 
@@ -70,7 +71,8 @@ public class LightInfoDao extends AbstractDao<LightInfo, Long> {
                 "\"WARMING\" INTEGER NOT NULL ," + // 12: warming
                 "\"LED_STATE\" INTEGER NOT NULL ," + // 13: led_state
                 "\"NIGHT_LAMP_STATE\" INTEGER NOT NULL ," + // 14: night_lamp_state
-                "\"IS_DELETE\" INTEGER NOT NULL );"); // 15: isDelete
+                "\"IS_DELETE\" INTEGER NOT NULL ," + // 15: isDelete
+                "\"IS_CHECK\" INTEGER);"); // 16: isCheck
     }
 
     /** Drops the underlying database table. */
@@ -118,6 +120,11 @@ public class LightInfoDao extends AbstractDao<LightInfo, Long> {
         stmt.bindLong(14, entity.getLed_state());
         stmt.bindLong(15, entity.getNight_lamp_state());
         stmt.bindLong(16, entity.getIsDelete());
+ 
+        Boolean isCheck = entity.getIsCheck();
+        if (isCheck != null) {
+            stmt.bindLong(17, isCheck ? 1L: 0L);
+        }
     }
 
     @Override
@@ -159,6 +166,11 @@ public class LightInfoDao extends AbstractDao<LightInfo, Long> {
         stmt.bindLong(14, entity.getLed_state());
         stmt.bindLong(15, entity.getNight_lamp_state());
         stmt.bindLong(16, entity.getIsDelete());
+ 
+        Boolean isCheck = entity.getIsCheck();
+        if (isCheck != null) {
+            stmt.bindLong(17, isCheck ? 1L: 0L);
+        }
     }
 
     @Override
@@ -184,7 +196,8 @@ public class LightInfoDao extends AbstractDao<LightInfo, Long> {
             cursor.getInt(offset + 12), // warming
             cursor.getInt(offset + 13), // led_state
             cursor.getInt(offset + 14), // night_lamp_state
-            cursor.getInt(offset + 15) // isDelete
+            cursor.getInt(offset + 15), // isDelete
+            cursor.isNull(offset + 16) ? null : cursor.getShort(offset + 16) != 0 // isCheck
         );
         return entity;
     }
@@ -207,6 +220,7 @@ public class LightInfoDao extends AbstractDao<LightInfo, Long> {
         entity.setLed_state(cursor.getInt(offset + 13));
         entity.setNight_lamp_state(cursor.getInt(offset + 14));
         entity.setIsDelete(cursor.getInt(offset + 15));
+        entity.setIsCheck(cursor.isNull(offset + 16) ? null : cursor.getShort(offset + 16) != 0);
      }
     
     @Override

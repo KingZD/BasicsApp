@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.EditText;
 
+import com.alibaba.fastjson.JSON;
 import com.mxchip.ftc_service.FTC_Listener;
 import com.project.jaijite.R;
 import com.project.jaijite.base.BaseTitleActivity;
@@ -15,6 +16,7 @@ import com.project.jaijite.entity.DeviceInfo;
 import com.project.jaijite.event.UpdateDeviceDataEvent;
 import com.project.jaijite.event.WifiStatusEvent;
 import com.project.jaijite.greendao.db.DeviceDB;
+import com.project.jaijite.util.EasyLinkTXTRecordUtil;
 import com.project.jaijite.util.EasyLinkUtil;
 import com.project.jaijite.util.ToastUtils;
 
@@ -25,6 +27,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.jmdns.JmDNS;
@@ -48,6 +51,15 @@ public class AddDeviceActivity extends BaseTitleActivity {
     @BindView(R.id.etPwd)
     EditText etPwd;
     String TAG = this.getClass().getName();
+    public static InetAddress intf = null;
+    public static JmDNS jmdns = null;
+    public static WifiManager wm = null;
+    public static WifiManager.MulticastLock lock = null;
+    public static SampleListener sl = null;
+    //扫描任务
+    Disposable scanSubscribe;
+    int deviceTypeFlag = 0; //0-添加设备 1-已有设备
+    String wifiName = "", wifiPwd = "";
 
     @Override
     public int getLayoutId() {
@@ -78,23 +90,18 @@ public class AddDeviceActivity extends BaseTitleActivity {
 
     @OnClick(R.id.btAddDevice)
     void addDevice() {
-        String name = etName.getText().toString();
-        String pwd = etPwd.getText().toString();
-        if (TextUtils.isEmpty(name)) {
+        wifiName = etName.getText().toString();
+        wifiPwd = etPwd.getText().toString();
+        if (TextUtils.isEmpty(wifiName)) {
             ToastUtils.showShort("请输入名称");
             return;
         }
-        if (TextUtils.isEmpty(pwd)) {
+        if (TextUtils.isEmpty(wifiPwd)) {
             ToastUtils.showShort("请输入密码");
             return;
         }
-//        showLoading("配网中", new DialogInterface.OnCancelListener() {
-//            @Override
-//            public void onCancel(DialogInterface dialog) {
-//                stopEasyLink();
-//            }
-//        });
-        startEasyLink(name, pwd);
+        deviceTypeFlag = 0;
+        startEasyLink(wifiName, wifiPwd);
         search();
     }
 
@@ -102,13 +109,7 @@ public class AddDeviceActivity extends BaseTitleActivity {
         EasyLinkUtil.startDeviceDiscovery(pwd, new FTC_Listener() {
             @Override
             public void onFTCfinished(Socket s, String jsonString) {
-                DeviceInfo info = new DeviceInfo();
-                info.setName(name);
-                info.setPwd(pwd);
-                DeviceDB.updateOrInsert(info);
-                EventBus.getDefault().post(new UpdateDeviceDataEvent());
                 ToastUtils.showShortSafe("设备配网成功");
-//                hideLoading();
                 stopEasyLink();
             }
 
@@ -118,48 +119,11 @@ public class AddDeviceActivity extends BaseTitleActivity {
                 hideLoading();
             }
         });
-//        EasyLinkUtil.getEasyLink().startEasyLink(EasyLinkUtil.getParam(pwd), new EasyLinkCallBack() {
-//            @Override
-//            public void onSuccess(int code, String message) {
-//                DeviceInfo info = new DeviceInfo();
-//                info.setName(name);
-//                info.setPwd(pwd);
-//                DeviceDB.insertDeviceData(info);
-//                EventBus.getDefault().post(new UpdateDeviceDataEvent());
-//                ToastUtils.showShortSafe("设备配网成功");
-//                hideLoading();
-//                stopEasyLink();
-//                search();
-//            }
-//
-//            @Override
-//            public void onFailure(int code, String message) {
-//
-//            }
-//        });
     }
 
     private void stopEasyLink() {
         EasyLinkUtil.stopDeviceDiscovery();
-//        EasyLinkUtil.getEasyLink().stopEasyLink(new EasyLinkCallBack() {
-//            @Override
-//            public void onSuccess(int code, String message) {
-//                LogUtils.i(message);
-//            }
-//
-//            @Override
-//            public void onFailure(int code, String message) {
-//                LogUtils.i(message);
-//            }
-//        });
     }
-
-
-    public static InetAddress intf = null;
-    public static JmDNS jmdns = null;
-    public static WifiManager wm = null;
-    public static WifiManager.MulticastLock lock = null;
-    public static SampleListener sl = null;
 
     private void scanDevice() {
         try {
@@ -192,6 +156,10 @@ public class AddDeviceActivity extends BaseTitleActivity {
             scanSubscribe.dispose();
         if (jmdns != null && sl != null)
             jmdns.removeServiceListener("_easylink._tcp.local.", sl);
+//        if (lock != null) {
+//            lock.release();
+//        }
+//        lock = null;
         jmdns = null;
         sl = null;
     }
@@ -214,27 +182,74 @@ public class AddDeviceActivity extends BaseTitleActivity {
         return addr;
     }
 
+
+    @OnClick(R.id.btSearch)
+    void search() {
+        deviceTypeFlag = 1;
+        showLoading("正在扫描设备", new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                stopScan();
+            }
+        });
+        if (scanSubscribe != null && !scanSubscribe.isDisposed())
+            scanSubscribe.dispose();
+        scanSubscribe = Observable
+                .interval(0, 3000, TimeUnit.MILLISECONDS)
+                .map(new Function<Long, Long>() {
+                    @Override
+                    public Long apply(Long aLong) throws Exception {
+                        scanDevice();//每三秒运行一次 否则时间可能没有数据
+                        return aLong;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        if (aLong >= 20) {
+                            ToastUtils.showShortSafe("扫描设备超时");
+                            stopScan();
+                        }
+                    }
+                });
+    }
+
+
     class SampleListener implements ServiceListener, ServiceTypeListener {
 
         public void serviceAdded(ServiceEvent event) {
-            // Log.i("ADD", "service type = " + event.getType() + ", name = "
-            // + event.getName() + ",IP:" + jmdns.getHostName()+",port:");
             ServiceInfo sInfo = jmdns.getServiceInfo("_easylink._tcp.local.",
                     event.getName());
             if (null != sInfo) {
+                String mac = "MAC:".concat(EasyLinkTXTRecordUtil.setDeviceMac(String.valueOf(sInfo.getTextString())));
+                DeviceInfo existsDevice = DeviceDB.isExistsDevice(mac);
+                List<DeviceInfo> allDeviceData = DeviceDB.getAllDeviceData();
                 //添加设备
-
-
-                Log.i("====", "serviceInfo:" + sInfo.getTextString());
-                Log.i("====",
-                        "Name:" + sInfo.getName() + "Service:"
-                                + sInfo.getType() + "IP:" + sInfo.getAddress()
-                                + "port:" + sInfo.getPort()
-                                + "Mac:" + sInfo.getTextString());
-                ToastUtils.showShortSafe("发现设备 <<<Name:" + sInfo.getName() + "Service:"
-                        + sInfo.getType() + "IP:" + sInfo.getAddress()
-                        + "port:" + sInfo.getPort()
-                        + "Mac:" + sInfo.getTextString() + ">>>");
+                String showName = "JR_LINK_" + (allDeviceData.size() + 1);
+                DeviceInfo info = new DeviceInfo(null,
+                        showName,
+                        wifiName,
+                        wifiPwd,
+                        "IP:".concat(EasyLinkTXTRecordUtil.setDeviceIP(String.valueOf(sInfo.getAddress()))),
+                        mac,
+                        sInfo.getName(),
+                        sInfo.getType(),
+                        sInfo.getPort(),
+                        false);
+                if (deviceTypeFlag == 0) {//在添加设备情况下 如果搜索到新设备则停止扫描并添加设备 反之则继续扫描直到超时
+                    ToastUtils.showShortSafe("搜索到新设备");
+                } else {//在扫描设备情况下 如果搜索到已有设备则停止扫描 否则继续扫描直到超时
+                    if (existsDevice != null) {
+                        info.setShowName(existsDevice.getShowName());
+                        info.setCheck(existsDevice.getCheck());
+                    }
+                    ToastUtils.showShortSafe("已发现设备");
+                }
+                DeviceDB.updateOrInsert(info);
+                EventBus.getDefault().post(new UpdateDeviceDataEvent());
+                stopScan();
             }
         }
 
@@ -252,41 +267,6 @@ public class AddDeviceActivity extends BaseTitleActivity {
             Log.i("TYPE-ADDED", "service type = " + event.getType()
                     + ", name = " + event.getName());
         }
-    }
-
-    Disposable scanSubscribe;
-
-    @OnClick(R.id.btSearch)
-    void search() {
-        showLoading("正在扫描设备", new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                stopScan();
-            }
-        });
-        if (scanSubscribe != null && !scanSubscribe.isDisposed())
-            scanSubscribe.dispose();
-        scanSubscribe = Observable
-                .interval(1000, 3000, TimeUnit.MILLISECONDS)
-                .map(new Function<Long, Long>() {
-                    @Override
-                    public Long apply(Long aLong) throws Exception {
-                        if (aLong == 0)//只运行一次
-                            scanDevice();
-                        return aLong;
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Long>() {
-                    @Override
-                    public void accept(Long aLong) throws Exception {
-                        if (aLong >= 20) {
-                            ToastUtils.showShortSafe("扫描设备超时");
-                            stopScan();
-                        }
-                    }
-                });
     }
 
     @OnClick(R.id.btLeft)

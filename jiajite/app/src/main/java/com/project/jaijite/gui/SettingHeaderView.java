@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.project.jaijite.R;
+import com.project.jaijite.util.SPUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +43,7 @@ public class SettingHeaderView extends RelativeLayout {
                 mListener.touch(view, isChecked);
             }
         });
+        switchButton.setChecked(SPUtils.getInstance().getBoolean("touchShake"));
     }
 
     //功能介绍

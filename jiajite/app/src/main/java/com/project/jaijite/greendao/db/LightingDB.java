@@ -18,6 +18,7 @@ public class LightingDB {
 
     /**
      * 是否有数据
+     *
      * @return
      */
     public static boolean isEmpty() {
@@ -26,20 +27,22 @@ public class LightingDB {
 
     /**
      * 获取所有正常灯的数据
+     *
      * @return
      */
     public static List<LightInfo> getAllNormalLightData() {
         DbManager.getDaoSession().clear();
-       return DbManager
-               .getDaoSession()
-               .getLightInfoDao()
-               .queryBuilder()
-               .where(LightInfoDao.Properties.IsDelete.eq(0))
-               .list();
+        return DbManager
+                .getDaoSession()
+                .getLightInfoDao()
+                .queryBuilder()
+                .where(LightInfoDao.Properties.IsDelete.eq(0))
+                .list();
     }
 
     /**
      * 获取所有移除灯的数据
+     *
      * @return
      */
     public static List<LightInfo> getAllDelLightData() {
@@ -52,26 +55,32 @@ public class LightingDB {
                 .list();
     }
 
-    public static void updateLight(LightInfo info){
+    public static void updateLight(LightInfo info) {
         DbManager
                 .getDaoSession()
                 .getLightInfoDao()
                 .update(info);
     }
 
-    public static void updateLight(List<LightInfo> info){
+    public static void updateLight(List<LightInfo> info) {
         DbManager
                 .getDaoSession()
                 .getLightInfoDao()
                 .updateInTx(info);
     }
 
-    public static void delLight(LightInfo info){
+    public static void clear() {
+        DbManager
+                .getDaoSession()
+                .getLightInfoDao().deleteAll();
+    }
+
+    public static void delLight(LightInfo info) {
         info.setIsDelete(1);
         updateLight(info);
     }
 
-    public static void addLight(LightInfo info){
+    public static void addLight(LightInfo info) {
         info.setIsDelete(0);
         updateLight(info);
     }

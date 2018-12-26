@@ -1,5 +1,6 @@
 package com.project.jaijite.base;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -47,13 +48,18 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected void showLoading(String content) {
+        showLoading(content, null);
+    }
+
+    protected void showLoading(String content, DialogInterface.OnCancelListener cancelListener) {
         if (loadingDialog == null) {
             loadingDialog = new LoadingDialog(getActivity());
         }
+        if (cancelListener != null)
+            loadingDialog.setOnCancelListener(cancelListener);
         loadingDialog.setContent(content);
         loadingDialog.show();
     }
-
     protected void hideLoading() {
         if (loadingDialog != null) {
             loadingDialog.hide();

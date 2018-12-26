@@ -87,6 +87,10 @@
             android:name=".activity.OALoginActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|locale|layoutDirection|keyboard"
             android:theme="@style/Login" />
+
+
+        <service android:name=".service.MainService" />
+        <service android:name="io.fogcloud.sdk.mqtt.service.MqttService" />
     </application>
 
 </manifest>

@@ -27,12 +27,11 @@ import javax.jmdns.impl.ServiceInfoImpl;
  * REMIND: Prevent having multiple service resolvers for the same type in the
  * timer queue.
  */
-public class ServiceResolver extends TimerTask
-{
+public class ServiceResolver extends TimerTask {
     static Logger logger = Logger.getLogger(ServiceResolver.class.getName());
 
     /**
-     * 
+     *
      */
     private final JmDNSImpl jmDNSImpl;
     /**
@@ -41,59 +40,42 @@ public class ServiceResolver extends TimerTask
     int count = 0;
     private String type;
 
-    public ServiceResolver(JmDNSImpl jmDNSImpl, String type)
-    {
+    public ServiceResolver(JmDNSImpl jmDNSImpl, String type) {
         this.jmDNSImpl = jmDNSImpl;
         this.type = type;
     }
 
-    public void start(Timer timer)
-    {
+    public void start(Timer timer) {
         timer.schedule(this, DNSConstants.QUERY_WAIT_INTERVAL, DNSConstants.QUERY_WAIT_INTERVAL);
     }
 
-    public void run()
-    {
-        try
-        {
-            if (this.jmDNSImpl.getState() == DNSState.ANNOUNCED)
-            {
-                if (count++ < 3)
-                {
+    public void run() {
+        try {
+            if (this.jmDNSImpl.getState() == DNSState.ANNOUNCED) {
+                if (count++ < 3) {
                     logger.finer("run() JmDNS querying service");
                     long now = System.currentTimeMillis();
                     DNSOutgoing out = new DNSOutgoing(DNSConstants.FLAGS_QR_QUERY);
                     out.addQuestion(new DNSQuestion(type, DNSConstants.TYPE_PTR, DNSConstants.CLASS_IN));
-                    for (Iterator s = this.jmDNSImpl.getServices().values().iterator(); s.hasNext();)
-                    {
+                    for (Iterator s = this.jmDNSImpl.getServices().values().iterator(); s.hasNext(); ) {
                         final ServiceInfoImpl info = (ServiceInfoImpl) s.next();
-                        try
-                        {
+                        try {
                             out.addAnswer(new DNSRecord.Pointer(info.getType(), DNSConstants.TYPE_PTR, DNSConstants.CLASS_IN, DNSConstants.DNS_TTL, info.getQualifiedName()), now);
-                        }
-                        catch (IOException ee)
-                        {
+                        } catch (IOException ee) {
                             break;
                         }
                     }
                     this.jmDNSImpl.send(out);
-                }
-                else
-                {
+                } else {
                     // After three queries, we can quit.
                     this.cancel();
                 }
-            }
-            else
-            {
-                if (this.jmDNSImpl.getState() == DNSState.CANCELED)
-                {
+            } else {
+                if (this.jmDNSImpl.getState() == DNSState.CANCELED) {
                     this.cancel();
                 }
             }
-        }
-        catch (Throwable e)
-        {
+        } catch (Throwable e) {
             logger.log(Level.WARNING, "run() exception ", e);
             this.jmDNSImpl.recover();
         }

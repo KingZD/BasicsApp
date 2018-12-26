@@ -18,7 +18,7 @@ public class LightingAdapter extends BaseQuickAdapter<LightInfo, BaseViewHolder>
     @Override
     protected void convert(BaseViewHolder helper, LightInfo light) {
         Picasso.with(helper.itemView.getContext())
-                .load(R.mipmap.led_offed)//led_opend
+                .load(light.getIsCheck() ? R.mipmap.led_opend : R.mipmap.led_offed)//led_opend
                 .into((ImageView) helper.getView(R.id.ledPowerBtn));
         helper.setText(R.id.ledNameTv, light.getName());
         helper.setText(R.id.ledLightTv, "亮度：" + light.getLight_level() + "%");

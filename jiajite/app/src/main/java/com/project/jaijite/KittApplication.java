@@ -1,6 +1,7 @@
 package com.project.jaijite;
 
 
+import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
 
 import com.alibaba.wireless.security.jaq.JAQException;
@@ -21,12 +22,14 @@ import com.aliyun.iot.aep.sdk.log.ALog;
 import com.aliyun.iot.aep.sdk.login.LoginBusiness;
 import com.aliyun.iot.aep.sdk.login.oa.OALoginAdapter;
 import com.project.jaijite.activity.OALoginActivity;
+import com.project.jaijite.service.MainService;
 import com.project.jaijite.util.LogUtils;
 import com.tencent.bugly.crashreport.CrashReport;
 
 public class KittApplication extends MultiDexApplication {
     private static KittApplication application;
     String TAG = this.getClass().getName();
+    private Intent service = null;
 
     @Override
     public void onCreate() {
@@ -42,6 +45,10 @@ public class KittApplication extends MultiDexApplication {
         initAuth();
         TmpSdk.init(this, new TmpInitConfig(TmpInitConfig.ONLINE));
         CrashReport.initCrashReport(getApplicationContext(), "80d4ac8245", true);
+
+        //start server
+        service = new Intent(this, MainService.class);
+        startService(service);
     }
 
     private void initIoT(){

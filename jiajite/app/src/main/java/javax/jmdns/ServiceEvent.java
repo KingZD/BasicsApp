@@ -6,11 +6,9 @@ package javax.jmdns;
 
 import java.util.EventObject;
 
-public abstract class ServiceEvent extends EventObject
-{
+public abstract class ServiceEvent extends EventObject {
 
-    public ServiceEvent(Object source)
-    {
+    public ServiceEvent(Object source) {
         super(source);
         // TODO Auto-generated constructor stub
     }

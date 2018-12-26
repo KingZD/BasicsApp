@@ -5,8 +5,6 @@
 
 package javax.jmdns.impl;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -40,6 +38,8 @@ import javax.jmdns.impl.tasks.Responder;
 import javax.jmdns.impl.tasks.ServiceInfoResolver;
 import javax.jmdns.impl.tasks.ServiceResolver;
 import javax.jmdns.impl.tasks.TypeResolver;
+
+import android.util.Log;
 
 // REMIND: multiple IP addresses
 
@@ -786,18 +786,14 @@ public class JmDNSImpl extends JmDNS {
                 if (!expired) {
                     // new record
                     ServiceEvent event = new ServiceEventImpl(this, type, toUnqualifiedName(type, name), null);
-                    Iterator iterator = serviceListenerList.iterator();
-                    while (iterator.hasNext()){
-                        if (iterator.next() != null)
-                            ((ServiceListener) iterator.next()).serviceAdded(event);
+                    for (Object aServiceListenerList : serviceListenerList) {
+                        ((ServiceListener) aServiceListenerList).serviceAdded(event);
                     }
                 } else {
                     // expire record
                     ServiceEvent event = new ServiceEventImpl(this, type, toUnqualifiedName(type, name), null);
-                    Iterator iterator = serviceListenerList.iterator();
-                    while (iterator.hasNext()){
-                        if (iterator.next() != null)
-                            ((ServiceListener) iterator.next()).serviceAdded(event);
+                    for (Object aServiceListenerList : serviceListenerList) {
+                        ((ServiceListener) aServiceListenerList).serviceRemoved(event);
                     }
                 }
             }
@@ -967,7 +963,7 @@ public class JmDNSImpl extends JmDNS {
     }
 
     /**
-     * Recover javax.jmdns when there is an error.
+     * Recover jmdns when there is an error.
      */
     public void recover() {
         logger.finer("recover()");

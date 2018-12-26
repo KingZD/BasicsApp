@@ -29,13 +29,13 @@ public class LightInfo implements Serializable {
     private int led_state = 0;
     private int night_lamp_state = 0;
     private int isDelete = 0;    //是否移除了该类型的灯 0-正常 1-移除
-    @Transient
-    private boolean isCheck; //自定义字段
+    private Boolean isCheck = false; //自定义字段
 
-    @Generated(hash = 298312183)
+    @Generated(hash = 1903345390)
     public LightInfo(Long id, String name, int light_level, int color_temp, String time_on,
             String time_off, String delay, int jump, int water, int touch, int gflash,
-            int bflash, int warming, int led_state, int night_lamp_state, int isDelete) {
+            int bflash, int warming, int led_state, int night_lamp_state, int isDelete,
+            Boolean isCheck) {
         this.id = id;
         this.name = name;
         this.light_level = light_level;
@@ -52,6 +52,7 @@ public class LightInfo implements Serializable {
         this.led_state = led_state;
         this.night_lamp_state = night_lamp_state;
         this.isDelete = isDelete;
+        this.isCheck = isCheck;
     }
 
     public LightInfo(String name) {
@@ -195,6 +196,10 @@ public class LightInfo implements Serializable {
     }
 
     public void setIsCheck(boolean isCheck) {
+        this.isCheck = isCheck;
+    }
+
+    public void setIsCheck(Boolean isCheck) {
         this.isCheck = isCheck;
     }
 }

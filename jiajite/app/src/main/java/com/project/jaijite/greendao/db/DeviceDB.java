@@ -8,20 +8,35 @@ import java.util.List;
 
 public class DeviceDB {
 
+    public static DeviceInfo isExistsDevice(String mac) {
+        return DbManager.getDaoSession().getDeviceInfoDao().queryBuilder()
+                .where(DeviceInfoDao.Properties.Mac.eq(mac)).build()
+                .unique();
+    }
+
+    public static DeviceInfo isExistsDevice(Long id) {
+        return DbManager.getDaoSession().getDeviceInfoDao().queryBuilder()
+                .where(DeviceInfoDao.Properties.Id.eq(id)).build()
+                .unique();
+    }
+
     public static List<DeviceInfo> getAllDeviceData() {
         return DbManager.getDaoSession().getDeviceInfoDao().queryBuilder().list();
     }
 
+    public static void updateAll(List<DeviceInfo> deviceInfos) {
+        DbManager.getDaoSession().getDeviceInfoDao().updateInTx(deviceInfos);
+    }
+
     public static void updateOrInsert(DeviceInfo info) {
-        //如果通过设备名称查到设备 则更新设备信息
+        //如果通过设备mac查到设备 则更新设备信息
         DeviceInfo di = DbManager.getDaoSession().getDeviceInfoDao().queryBuilder()
-                .where(DeviceInfoDao.Properties.Name.eq(info.getName()))
+                .where(DeviceInfoDao.Properties.Mac.eq(info.getMac()))
                 .build()
                 .unique();
         if (di != null) {
-            di.setName(info.getName());
-            di.setPwd(info.getPwd());
-            DbManager.getDaoSession().getDeviceInfoDao().update(di);
+            info.setId(di.getId());
+            DbManager.getDaoSession().getDeviceInfoDao().update(info);
         } else {
             DbManager.getDaoSession().getDeviceInfoDao().insert(info);
         }

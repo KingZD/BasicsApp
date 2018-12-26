@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="接通电源，确认指示灯闪2次 (循环)"
+            android:text="按下设备配网按钮，指示灯快闪。进入配网状态。配置成功指示灯长亮。"
             android:textColor="#8D8D90" />
 
         <Button

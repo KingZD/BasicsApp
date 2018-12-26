@@ -49,12 +49,12 @@
             android:textStyle="bold" />
 
         <com.project.jaijite.gui.SwitchButton
+            android:id="@+id/sbOpen"
             android:layout_width="60dp"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_margin="5dp"
-            swipe:sb_checked="true" />
+            android:layout_margin="5dp" />
 
         <View
             android:layout_width="match_parent"

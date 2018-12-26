@@ -25,8 +25,15 @@ public class DeviceInfoDao extends AbstractDao<DeviceInfo, Long> {
      */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Pwd = new Property(2, String.class, "pwd", false, "PWD");
+        public final static Property ShowName = new Property(1, String.class, "showName", false, "SHOW_NAME");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property Pwd = new Property(3, String.class, "pwd", false, "PWD");
+        public final static Property Ip = new Property(4, String.class, "ip", false, "IP");
+        public final static Property Mac = new Property(5, String.class, "mac", false, "MAC");
+        public final static Property DeviceName = new Property(6, String.class, "deviceName", false, "DEVICE_NAME");
+        public final static Property Server = new Property(7, String.class, "server", false, "SERVER");
+        public final static Property Port = new Property(8, int.class, "port", false, "PORT");
+        public final static Property Check = new Property(9, Boolean.class, "check", false, "CHECK");
     }
 
 
@@ -43,8 +50,15 @@ public class DeviceInfoDao extends AbstractDao<DeviceInfo, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"DEVICE_INFO\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
-                "\"NAME\" TEXT," + // 1: name
-                "\"PWD\" TEXT);"); // 2: pwd
+                "\"SHOW_NAME\" TEXT," + // 1: showName
+                "\"NAME\" TEXT," + // 2: name
+                "\"PWD\" TEXT," + // 3: pwd
+                "\"IP\" TEXT," + // 4: ip
+                "\"MAC\" TEXT," + // 5: mac
+                "\"DEVICE_NAME\" TEXT," + // 6: deviceName
+                "\"SERVER\" TEXT," + // 7: server
+                "\"PORT\" INTEGER NOT NULL ," + // 8: port
+                "\"CHECK\" INTEGER);"); // 9: check
     }
 
     /** Drops the underlying database table. */
@@ -62,14 +76,45 @@ public class DeviceInfoDao extends AbstractDao<DeviceInfo, Long> {
             stmt.bindLong(1, id);
         }
  
+        String showName = entity.getShowName();
+        if (showName != null) {
+            stmt.bindString(2, showName);
+        }
+ 
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
  
         String pwd = entity.getPwd();
         if (pwd != null) {
-            stmt.bindString(3, pwd);
+            stmt.bindString(4, pwd);
+        }
+ 
+        String ip = entity.getIp();
+        if (ip != null) {
+            stmt.bindString(5, ip);
+        }
+ 
+        String mac = entity.getMac();
+        if (mac != null) {
+            stmt.bindString(6, mac);
+        }
+ 
+        String deviceName = entity.getDeviceName();
+        if (deviceName != null) {
+            stmt.bindString(7, deviceName);
+        }
+ 
+        String server = entity.getServer();
+        if (server != null) {
+            stmt.bindString(8, server);
+        }
+        stmt.bindLong(9, entity.getPort());
+ 
+        Boolean check = entity.getCheck();
+        if (check != null) {
+            stmt.bindLong(10, check ? 1L: 0L);
         }
     }
 
@@ -82,14 +127,45 @@ public class DeviceInfoDao extends AbstractDao<DeviceInfo, Long> {
             stmt.bindLong(1, id);
         }
  
+        String showName = entity.getShowName();
+        if (showName != null) {
+            stmt.bindString(2, showName);
+        }
+ 
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
  
         String pwd = entity.getPwd();
         if (pwd != null) {
-            stmt.bindString(3, pwd);
+            stmt.bindString(4, pwd);
+        }
+ 
+        String ip = entity.getIp();
+        if (ip != null) {
+            stmt.bindString(5, ip);
+        }
+ 
+        String mac = entity.getMac();
+        if (mac != null) {
+            stmt.bindString(6, mac);
+        }
+ 
+        String deviceName = entity.getDeviceName();
+        if (deviceName != null) {
+            stmt.bindString(7, deviceName);
+        }
+ 
+        String server = entity.getServer();
+        if (server != null) {
+            stmt.bindString(8, server);
+        }
+        stmt.bindLong(9, entity.getPort());
+ 
+        Boolean check = entity.getCheck();
+        if (check != null) {
+            stmt.bindLong(10, check ? 1L: 0L);
         }
     }
 
@@ -102,8 +178,15 @@ public class DeviceInfoDao extends AbstractDao<DeviceInfo, Long> {
     public DeviceInfo readEntity(Cursor cursor, int offset) {
         DeviceInfo entity = new DeviceInfo( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // pwd
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // showName
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // pwd
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // ip
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // mac
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // deviceName
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // server
+            cursor.getInt(offset + 8), // port
+            cursor.isNull(offset + 9) ? null : cursor.getShort(offset + 9) != 0 // check
         );
         return entity;
     }
@@ -111,8 +194,15 @@ public class DeviceInfoDao extends AbstractDao<DeviceInfo, Long> {
     @Override
     public void readEntity(Cursor cursor, DeviceInfo entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setPwd(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setShowName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setPwd(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setIp(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setMac(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setDeviceName(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setServer(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setPort(cursor.getInt(offset + 8));
+        entity.setCheck(cursor.isNull(offset + 9) ? null : cursor.getShort(offset + 9) != 0);
      }
     
     @Override
