@@ -13,10 +13,10 @@
         android:text="睡眠设置"
         android:textSize="18dp" />
 
-    <com.project.jaijite.gui.SwitchButton
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/tvSleep"
+    <com.project.jaijite.gui.SwitchButtonView
+        android:id="@+id/sbDelay"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
         android:layout_alignBottom="@+id/tvSleep"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
@@ -58,10 +58,10 @@
         android:text="定时开灯"
         android:textSize="18dp" />
 
-    <com.project.jaijite.gui.SwitchButton
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/tvTimerOpen"
+    <com.project.jaijite.gui.SwitchButtonView
+        android:id="@+id/sbTimeOn"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
         android:layout_alignBottom="@+id/tvTimerOpen"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
@@ -103,10 +103,10 @@
         android:text="定时关灯"
         android:textSize="18dp" />
 
-    <com.project.jaijite.gui.SwitchButton
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/tvTimerClose"
+    <com.project.jaijite.gui.SwitchButtonView
+        android:id="@+id/sbTimeOff"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
         android:layout_alignBottom="@+id/tvTimerClose"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"

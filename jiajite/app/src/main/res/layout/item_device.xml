@@ -45,6 +45,7 @@
             android:layout_height="match_parent"
             android:gravity="center|start"
             android:text="title"
+            android:textColor="#333333"
             android:textSize="14sp"
             android:textStyle="bold" />
 

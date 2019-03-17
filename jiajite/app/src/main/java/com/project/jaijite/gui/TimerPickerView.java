@@ -1,5 +1,6 @@
 package com.project.jaijite.gui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,8 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.SweepGradient;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,7 +30,7 @@ public class TimerPickerView extends View {
     Bitmap light, lightOpen, lightClose;
 
     private float mDefDegress = 70;
-    private float mWaterDegress = 350;
+    private float mWaterDegress = 340;
     private boolean currentLightStatus = false;
     /**
      * 中心点
@@ -83,6 +86,7 @@ public class TimerPickerView extends View {
         //按钮比例是外圈时间的五分之三
         cWidth = mWidth / 5;
         drawSwitch(cWidth, canvas);
+        mWaterDegress = 0;
     }
 
     private void drawTimer(Canvas canvas) {
@@ -97,10 +101,10 @@ public class TimerPickerView extends View {
     private void drawButton(float cWidth, Canvas canvas) {
         mPaint.setColor(Color.parseColor("#A1A09F"));
         mPaint.setStyle(Paint.Style.FILL);
-        if (btnGradient == null)
-            btnGradient = new SweepGradient(mWidth / 2, mHeight / 2, new int[]{
-                    Color.GRAY, Color.LTGRAY, Color.GRAY, Color.LTGRAY, Color.GRAY, Color.LTGRAY}, new float[]{0f, 0.2f, 0.4f, 0.6f, 0.8f, 1f});
-        mPaint.setShader(btnGradient);
+//        if (btnGradient == null)
+//            btnGradient = new SweepGradient(mWidth / 2, mHeight / 2, new int[]{
+//                    Color.GRAY, Color.LTGRAY, Color.GRAY, Color.LTGRAY, Color.GRAY, Color.LTGRAY}, new float[]{0f, 0.2f, 0.4f, 0.6f, 0.8f, 1f});
+//        mPaint.setShader(btnGradient);
         canvas.drawCircle(0, 0, cWidth / 2, mPaint);
 
         mPaint.setShader(null);
@@ -130,6 +134,7 @@ public class TimerPickerView extends View {
     private float mLastUnit = 0;
 
     int time = 1;
+    private int oldTime = 1;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -138,65 +143,95 @@ public class TimerPickerView extends View {
         boolean inCenter = Math.sqrt(x * x + y * y) <= mWidth / 5 / 2;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                ScreenUtils.shake();
             case MotionEvent.ACTION_MOVE:
-                if (!inCenter) {
-                    float touch = (float) Math.atan2(y, x);
-                    float angle = touch - (float) Math.toRadians(mDefDegress);
-                    mWaterDegress = (float) Math.toDegrees((angle - mLastUnit));
-//                double jd = 180 * touch / Math.PI;
-//                if (jd > 0 && jd <= mDefDegress) {
-//                    mWaterDegress = (float) Math.toRadians(mDefDegress);
-//                    break;
-//                }
-//                if (jd < 0 && jd >= -20 && allowSlide) {
-//                    mWaterDegress = -(float) Math.toRadians(mDefDegress);
-//                    break;
-//                }
-                    mLastUnit = angle;
 
-                    //将圆周率转换成0-1进行颜色取色范围解析
-                    float unit = angle / (float) (2 * Math.PI);
-                    if (unit < 0) {
-                        unit += 1;
-                    }
-                    //分为110个小模块 1-110=>0.09 = 1分钟 因为精度原因 在原本的+2
-                    time = (int) (112 * (1 - unit));
-                    if (time > 110) {
-                        time = 1;
-                    } else if (time > 100) {
-                        time = 100;
-                    } else if (time == 0) {
-                        time = 1;
-                    }
-                    invalidate();
+                float touch = (float) Math.atan2(y, x);
+                float angle = touch - (float) Math.toRadians(mDefDegress);
+                mWaterDegress = (float) Math.toDegrees((angle - mLastUnit));
+                mLastUnit = angle;
+
+                //将圆周率转换成0-1进行颜色取色范围解析
+                float unit = angle / (float) (2 * Math.PI);
+                if (unit < 0) {
+                    unit += 1;
+                }
+                //分为110个小模块 1-110=>0.09 = 1分钟 因为精度原因 在原本的+2
+                time = (int) (112 * (1 - unit));
+                if (time > 110) {
+                    time = 1;
+                } else if (time > 100) {
+                    time = 100;
+                } else if (time == 0) {
+                    time = 1;
+                }
+                postInvalidate();
+                if (!inCenter) {
+                    if (listener != null && handler != null && oldTime != time)
+                        handler.sendEmptyMessageDelayed(0, 0);
+//                    if (listener != null && oldTime != time)
+//                        listener.getTime(time);
+                    oldTime = time;
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 if (inCenter) {
-                    mWaterDegress = 0;
-                    if (currentLightStatus) {
-                        light = lightClose;
-                        currentLightStatus = false;
-                    } else {
-                        light = lightOpen;
-                        currentLightStatus = true;
+                    //自己点击图片自动切换状态
+                    boolean autoCheck = true;
+                    if (listener != null) {
+                        autoCheck = listener.lightStatus(currentLightStatus, new ClickStatus() {
+                            @Override
+                            public void clickStatus(boolean status) {
+                                updateSwitch(status);
+                            }
+                        });
                     }
-                    if (listener != null)
-                        listener.lightStatus(currentLightStatus);
-                    invalidate();
-                } else {
-                    if (listener != null)
-                        listener.getTime(time);
+                    if (autoCheck) {
+                        if (currentLightStatus) {
+                            light = lightClose;
+                            currentLightStatus = false;
+                        } else {
+                            light = lightOpen;
+                            currentLightStatus = true;
+                        }
+                        invalidate();
+                    }
                 }
                 break;
         }
         return true;
     }
 
+    public void setCurrentLightStatus(boolean currentLightStatus) {
+//        mWaterDegress -= mWaterDegress;
+        updateSwitch(currentLightStatus, false);
+    }
+
+    public void updateSwitch(boolean isOPen) {
+        updateSwitch(isOPen, true);
+    }
+
+    public void updateSwitch(boolean isOPen, boolean recover) {
+        if (recover)
+            mWaterDegress -= mWaterDegress;
+        currentLightStatus = isOPen;
+        if (currentLightStatus) {
+            light = lightOpen;
+        } else {
+            light = lightClose;
+        }
+        invalidate();
+    }
+
+
+    public interface ClickStatus {
+        void clickStatus(boolean status);
+    }
+
     public interface OnTimerListener {
         void getTime(int ms);
 
-        void lightStatus(boolean isOpen);
+        boolean lightStatus(boolean isOpen, ClickStatus status);
     }
 
     private OnTimerListener listener;
@@ -204,4 +239,14 @@ public class TimerPickerView extends View {
     public void setListener(OnTimerListener listener) {
         this.listener = listener;
     }
+
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (listener != null)
+                listener.getTime(time);
+        }
+    };
 }

@@ -16,6 +16,7 @@ import com.project.jaijite.R;
 import com.project.jaijite.adapter.AddLedAdapter;
 import com.project.jaijite.base.BaseTitleActivity;
 import com.project.jaijite.entity.Light;
+import com.project.jaijite.entity.LightInfo;
 import com.project.jaijite.util.ToastUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.yzq.zxinglibrary.android.CaptureActivity;
@@ -40,6 +41,8 @@ public class AddLedActivity extends BaseTitleActivity {
     private AddLedAdapter adapter;
     private List<Light> listData;
     private final int REQUEST_CODE_SCAN = 10000;
+    private LightInfo lightInfo;
+    public static String PARAM = "param";
 
     public void initData() {
         this.listData = new ArrayList<>();
@@ -58,6 +61,7 @@ public class AddLedActivity extends BaseTitleActivity {
     @Override
     public void initView() {
         initData();
+        lightInfo = (LightInfo) getIntent().getSerializableExtra(PARAM);
         adapter = new AddLedAdapter();
         rlList.setAdapter(adapter);
         rlList.setLayoutManager(new LinearLayoutManager(this));
@@ -82,6 +86,7 @@ public class AddLedActivity extends BaseTitleActivity {
     @OnClick(R.id.ivAddLed)
     void addLed() {
         Intent intent = new Intent(this, GroupActivity.class);
+        intent.putExtra(GroupActivity.PARAM, lightInfo);
         startActivity(intent);
     }
 
@@ -145,7 +150,7 @@ public class AddLedActivity extends BaseTitleActivity {
          * contentEtString：字符串内容
          * w：图片的宽
          * h：图片的高
-         * logo：不需要logo的话直接传null
+         * logo1：不需要logo的话直接传null
          * */
 
         Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);

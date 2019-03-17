@@ -20,7 +20,7 @@ public class DeviceInfo implements Serializable {
     private String deviceName;//设备名称
     private String server;
     private int port;
-    private Boolean check;
+    private Boolean check = false;
 
     @Generated(hash = 1005351940)
     public DeviceInfo(Long id, String showName, String name, String pwd, String ip,

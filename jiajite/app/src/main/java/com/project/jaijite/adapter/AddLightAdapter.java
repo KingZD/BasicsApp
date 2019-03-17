@@ -18,16 +18,14 @@ public class AddLightAdapter extends BaseQuickAdapter<LightInfo, BaseViewHolder>
     @Override
     protected void convert(final BaseViewHolder helper, final LightInfo item) {
         Picasso.with(helper.itemView.getContext())
-                .load(R.mipmap.led_opend)
+                .load(R.mipmap.led_offed)
                 .into((ImageView) helper.getView(R.id.ivIcon));
-        helper.setChecked(R.id.ledCheckBox, item.getIsCheck());
         helper.setText(R.id.ledNameTv, item.getName());
         helper.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                item.setIsCheck(!item.getIsCheck());
-                helper.setChecked(R.id.ledCheckBox, item.getIsCheck());
-                item.setIsDelete(item.getIsCheck() ? 0 : 1);
+                item.setIsDelete(item.getIsDelete() == 1 ? 0 : 1);
+                helper.setChecked(R.id.ledCheckBox, item.getIsDelete() == 0);
             }
         });
     }

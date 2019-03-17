@@ -76,7 +76,7 @@ public class AddDeviceActivity extends BaseTitleActivity {
         if (!wifiEnabled) {
             etName.setText("请开启手机WIFI后重试");
         } else {
-            etName.setText(EasyLinkUtil.getSSID());
+            etName.setText(EasyLinkUtil.getCurrentSSID(this));
         }
     }
 
@@ -160,7 +160,7 @@ public class AddDeviceActivity extends BaseTitleActivity {
 //            lock.release();
 //        }
 //        lock = null;
-        jmdns = null;
+//        jmdns = null;
         sl = null;
     }
 
@@ -209,7 +209,7 @@ public class AddDeviceActivity extends BaseTitleActivity {
                     @Override
                     public void accept(Long aLong) throws Exception {
                         if (aLong >= 20) {
-                            ToastUtils.showShortSafe("扫描设备超时");
+                            ToastUtils.showShortSafe(deviceTypeFlag == 0 ? "扫描设备超时" : "扫描设备结束");
                             stopScan();
                         }
                     }
@@ -240,16 +240,18 @@ public class AddDeviceActivity extends BaseTitleActivity {
                         false);
                 if (deviceTypeFlag == 0) {//在添加设备情况下 如果搜索到新设备则停止扫描并添加设备 反之则继续扫描直到超时
                     ToastUtils.showShortSafe("搜索到新设备");
+                    stopScan();
                 } else {//在扫描设备情况下 如果搜索到已有设备则停止扫描 否则继续扫描直到超时
                     if (existsDevice != null) {
                         info.setShowName(existsDevice.getShowName());
                         info.setCheck(existsDevice.getCheck());
+                    } else {
+                        ToastUtils.showShortSafe("已发现设备");
+                        stopScan();
                     }
-                    ToastUtils.showShortSafe("已发现设备");
                 }
                 DeviceDB.updateOrInsert(info);
                 EventBus.getDefault().post(new UpdateDeviceDataEvent());
-                stopScan();
             }
         }
 

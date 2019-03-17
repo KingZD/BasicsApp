@@ -2,18 +2,24 @@ package com.project.jaijite.service;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 
 import com.alibaba.fastjson.JSON;
+import com.project.jaijite.R;
 import com.project.jaijite.bean.Info;
 import com.project.jaijite.bean.Task;
-import com.project.jaijite.util.ToastUtils;
 
 import org.apache.http.util.ByteArrayBuffer;
+import org.apache.http.util.TextUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +29,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
+//老代码
 public class MainService extends Service implements Runnable {
     private static Socket client_socket = null;
     private static boolean isRun = false;
@@ -38,10 +45,11 @@ public class MainService extends Service implements Runnable {
         super.onCreate();
         isRun = true;
         System.out.println("start server");
+        createNotificationChannel();
     }
 
-    public static void newTask(Task t, boolean flag) {
-        ToastUtils.showShortSafe(JSON.toJSONString(t));
+    public static void newTask(Task t, boolean flag, TaskListener ls) {
+        listener = ls;
         is_retry = flag;
         tasks.add(t);
         new Thread(new Runnable() {
@@ -60,6 +68,13 @@ public class MainService extends Service implements Runnable {
                                 while (try_count < 3) {
                                     try_count++;
                                     task_result = doTask(task);
+                                    if (!TextUtils.isEmpty(task_result) && task_result.startsWith("传输错误：")) {
+                                        Message msg = new Message();
+                                        msg.what = 5;
+                                        msg.obj = task_result;
+                                        handler.sendMessage(msg);
+                                        break;
+                                    }
                                     if (!task_result.equals("")) {
                                         // 更新ui
                                         try_count = 0;
@@ -74,15 +89,22 @@ public class MainService extends Service implements Runnable {
                                         Thread.sleep(1000);
                                     } catch (Exception e) {
                                         closeSocket(client_socket);
-                                        e.printStackTrace();
                                         Message msg = new Message();
                                         msg.what = 3;
+                                        msg.obj = e.getLocalizedMessage();
                                         handler.sendMessage(msg);
                                     }
                                 }
 
                             } else {
                                 task_result = doTask(task);
+                                if (!TextUtils.isEmpty(task_result) && task_result.startsWith("传输错误：")) {
+                                    Message msg = new Message();
+                                    msg.what = 5;
+                                    msg.obj = task_result;
+                                    handler.sendMessage(msg);
+                                    return;
+                                }
                             }
                             if (try_count >= 3 && is_retry) {
                                 //重连3次失败
@@ -90,6 +112,7 @@ public class MainService extends Service implements Runnable {
                                 try_count = 0;
                                 Message msg = new Message();
                                 msg.what = 2;
+                                msg.obj = "发送指令失败";
                                 handler.sendMessage(msg);
                             }
                         }
@@ -116,10 +139,16 @@ public class MainService extends Service implements Runnable {
 
     private static boolean createrSocket() {
         try {
-            client_socket = new Socket(Info.SERVER_ADDR, Info.PORT);
+            String IP = Info.SERVER_ADDR;
+            if (!TextUtils.isEmpty(IP))
+                IP = IP.replace("IP:", "");
+            client_socket = new Socket(IP, Info.PORT);
         } catch (IOException e) {
-            ToastUtils.showShortSafe("连接错误："+e.getLocalizedMessage());
             e.printStackTrace();
+            Message msg = new Message();
+            msg.what = 4;
+            msg.obj = " 连接错误：" + e.getLocalizedMessage() + " - " + Info.SERVER_ADDR + " - " + Info.PORT;
+            handler.sendMessage(msg);
             return false;
         }
         return true;
@@ -133,17 +162,27 @@ public class MainService extends Service implements Runnable {
     @SuppressLint("HandlerLeak")
     static Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
-
             switch (msg.what) {
                 case 1:
                     Task task = (Task) msg.obj;
-                    ToastUtils.showShortSafe(JSON.toJSONString(task));
+                    if (listener != null)
+                        listener.taskCallback(JSON.toJSONString(task));
                     break;
                 case 2:
-                    ToastUtils.showShortSafe("连接失败，请检查网络重新尝试操作");
+                    if (listener != null)
+                        listener.taskFailed("status:2 " + msg.obj.toString());
                     break;
                 case 3:
-                    ToastUtils.showShortSafe("连接失败，请检查网络");
+                    if (listener != null)
+                        listener.taskFailed("status:3 " + msg.obj.toString());
+                    break;
+                case 4:
+                    if (listener != null)
+                        listener.taskFailed("status:4 " + msg.obj.toString());
+                    break;
+                case 5:
+                    if (listener != null)
+                        listener.taskFailed("status:5 " + msg.obj.toString());
                     break;
                 default:
                     break;
@@ -176,7 +215,7 @@ public class MainService extends Service implements Runnable {
         try {
             client_socket.setSoTimeout(5 * 1000);
             out = new PrintWriter(client_socket.getOutputStream());
-            out.println(command);
+            out.print(command);
             out.flush();
             if (is_retry) {
                 reader = client_socket.getInputStream();
@@ -195,11 +234,11 @@ public class MainService extends Service implements Runnable {
                             System.out.println("send command resultStr====[" + resultStr + "]");
                         }
                     }
-                    if (!resultStr.equals("") && command.equals("GETLED")) {
+                    if (!resultStr.equals("") && resultStr.equals(command)) {
                         closeSocket(client_socket);
                         return resultStr;
                     }
-                    if (!resultStr.equals("") && resultStr.equals(command)) {
+                    if (!resultStr.equals("")) {
                         closeSocket(client_socket);
                         return resultStr;
                     }
@@ -207,12 +246,10 @@ public class MainService extends Service implements Runnable {
                     Thread.sleep(1 * 1000);
                 }
             }
-
+            return "传输错误：数据为空";
         } catch (Exception ex) {
-            System.out.println("error:" + ex.toString());
-            return "";
+            return "传输错误：" + ex.getLocalizedMessage();
         }
-        return "";
     }
 
 
@@ -249,6 +286,43 @@ public class MainService extends Service implements Runnable {
 			e.printStackTrace();
 		}*/
 
+    }
+
+    private static TaskListener listener;
+
+    public interface TaskListener {
+        void taskCallback(Object... obj);
+
+        void taskFailed(String msg);
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            // 通知渠道的id
+            String id = "my_channel_01";
+            // 用户可以看到的通知渠道的名字.
+            CharSequence name = getString(R.string.app_name);
+//         用户可以看到的通知渠道的描述
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = new NotificationChannel(id, name, importance);
+//         配置通知渠道的属性
+            mChannel.setDescription("程序正在运行");
+//         最后在notificationmanager中创建该通知渠道 //
+            mNotificationManager.createNotificationChannel(mChannel);
+
+            // 为该通知设置一个id
+            int notifyID = 1;
+            // 通知渠道的id
+            String CHANNEL_ID = "my_channel_01";
+            // Create a notification and set the notification channel.
+            Notification notification = new Notification.Builder(this)
+                    .setContentTitle(name).setContentText("程序正在运行")
+                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setChannelId(CHANNEL_ID)
+                    .build();
+            startForeground(1, notification);
+        }
     }
 
 }

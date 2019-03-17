@@ -17,11 +17,11 @@ import com.project.jaijite.R;
 import com.project.jaijite.base.BaseActivity;
 import com.project.jaijite.base.BaseFragment;
 import com.project.jaijite.entity.DeviceInfo;
+import com.project.jaijite.event.UpdateDeviceDataEvent;
 import com.project.jaijite.event.WifiStatusEvent;
 import com.project.jaijite.fragment.LightingFragment;
 import com.project.jaijite.fragment.SettingFragment;
 import com.project.jaijite.greendao.db.DeviceDB;
-import com.project.jaijite.util.EasyLinkTXTRecordUtil;
 import com.project.jaijite.util.ToastUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -45,7 +45,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initView() {
-
         select(R.id.rbLight);
         Disposable subscribe = new RxPermissions(this)
                 .request(Manifest.permission.ACCESS_WIFI_STATE)
@@ -54,11 +53,11 @@ public class MainActivity extends BaseActivity {
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {
-                      if(aBoolean){
-                          init();
-                      }else {
-                          ToastUtils.showShort("申请WIFI权限失败");
-                      }
+                        if (aBoolean) {
+                            init();
+                        } else {
+                            ToastUtils.showShort("申请WIFI权限失败");
+                        }
                     }
                 });
     }
@@ -78,6 +77,8 @@ public class MainActivity extends BaseActivity {
             case R.id.rbSetting:
                 if (settingFragment == null) {
                     settingFragment = new SettingFragment();
+                } else {
+                    EventBus.getDefault().post(new UpdateDeviceDataEvent());
                 }
                 replace(settingFragment);
                 break;

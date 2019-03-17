@@ -2,6 +2,7 @@ package com.project.jaijite;
 
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.multidex.MultiDexApplication;
 
 import com.alibaba.wireless.security.jaq.JAQException;
@@ -48,7 +49,11 @@ public class KittApplication extends MultiDexApplication {
 
         //start server
         service = new Intent(this, MainService.class);
-        startService(service);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(service);
+        } else {
+            startService(service);
+        }
     }
 
     private void initIoT(){

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">家基特</string>
+    <string name="app_name">JR-LINK</string>
     <string name="titleLed">LED灯</string>
     <string name="titleLedEdit">添加LED灯</string>
     <string name="titleLedSearch">灯列表</string>
@@ -44,7 +44,7 @@
 
 
     <!-- 设置页面 -->
-    <string name="appName">HOME KITT</string>
+    <string name="appName">JR-LINK</string>
     <string name="appNameChinese">智能家居控制系统</string>
 
     <string name="groupA">A组</string>

@@ -23,11 +23,11 @@ public class LightingAdapter extends BaseQuickAdapter<LightInfo, BaseViewHolder>
         helper.setText(R.id.ledNameTv, light.getName());
         helper.setText(R.id.ledLightTv, "亮度：" + light.getLight_level() + "%");
         helper.setText(R.id.ledTempTv, "色温：" + light.getColor_temp() + "k");
-        String openLedTv = "定时开灯：" + (TextUtils.equals(light.getTime_on(), "00:00") ? "关" : "开");
+        String openLedTv = "定时开灯：" + (light.getTimeOnSwitch() ? "开" : "关");
         helper.setText(R.id.timingOpenLedTv, openLedTv);
-        String closeLedTv = "定时关灯：" + (TextUtils.equals(light.getTime_off(), "00:00") ? "关" : "开");
+        String closeLedTv = "定时关灯：" + (light.getTimeOffSwitch() ? "开" : "关");
         helper.setText(R.id.timingCloseLedTv, closeLedTv);
-        String delayLedTv = "延时关灯：" + (TextUtils.equals(light.getDelay(), "00") ? "关" : "开");
+        String delayLedTv = "延时关灯：" + (light.getDelayOffSwitch() ? "开" : "关");
         helper.setText(R.id.delayCloseLedTv, delayLedTv);
         helper.addOnClickListener(R.id.btAddLed);
         helper.addOnClickListener(R.id.btReName);

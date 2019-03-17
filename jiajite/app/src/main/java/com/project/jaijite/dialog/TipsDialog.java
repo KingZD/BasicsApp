@@ -52,6 +52,13 @@ public class TipsDialog {
         return tipsDialog;
     }
 
+    public TipsDialog setVisibility(int viewId, int visibility) {
+        if (dialog != null) {
+            dialog.findViewById(viewId).setVisibility(visibility);
+        }
+        return tipsDialog;
+    }
+
     public TipsDialog setText(int viewId, String title) {
         if (dialog != null) {
             ((TextView) dialog.findViewById(viewId)).setText(title);
@@ -77,6 +84,24 @@ public class TipsDialog {
     public void show() {
         if (dialog != null)
             dialog.show();
+    }
+
+    public void show(ViewController viewController) {
+        if (dialog != null)
+            dialog.show();
+        viewController.view(this);
+    }
+
+    public TipsDialog setCancelable(boolean bool) {
+        if (dialog != null)
+            dialog.setCancelable(bool);
+        return tipsDialog;
+    }
+
+    public TipsDialog setCanceledOnTouchOutside(boolean bool) {
+        if (dialog != null)
+            dialog.setCanceledOnTouchOutside(bool);
+        return tipsDialog;
     }
 
     public void dismiss() {
@@ -109,5 +134,9 @@ public class TipsDialog {
 
     public interface TipClickListener {
         void onClick(View v, TipsDialog dialog);
+    }
+
+    public interface ViewController {
+        void view(TipsDialog dialog);
     }
 }

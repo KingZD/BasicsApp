@@ -1,5 +1,6 @@
 package com.project.jaijite.gui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +12,8 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.SweepGradient;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,7 +31,7 @@ public class ColorPickerView1 extends View {
     Bitmap light, lightOpen, lightClose;
     //渐变色数组
     private final int[] mColors = new int[]{
-            0xFFFF0000,0xFFFF00FF,0xFF0000FF,0xFF00FFFF,0xFF00FF00,0xFFFFFF00,0xFFFF0000
+            0xFFFF0000, 0xFFFF00FF, 0xFF0000FF, 0xFF00FFFF, 0xFF00FF00, 0xFFFFFF00, 0xFFFF0000
     };
     private int mDefDegress = -90;
     private float mWaterDegress = 0;
@@ -87,6 +90,7 @@ public class ColorPickerView1 extends View {
         //按钮比例是外圈时间的五分之三
         cWidth = mWidth / 5;
         drawSwitch(cWidth, canvas);
+        mWaterDegress = 0;
     }
 
     private void drawTimer(Canvas canvas) {
@@ -148,8 +152,9 @@ public class ColorPickerView1 extends View {
 
     /**
      * 取色
+     *
      * @param colors 颜色数组
-     * @param unit 去色值
+     * @param unit   去色值
      * @return 颜色
      */
     private int interpColor(int colors[], float unit) {
@@ -206,6 +211,8 @@ public class ColorPickerView1 extends View {
     private float mLastUnit = 0;
 
     private int defaultColor = 0;
+    private int oldColor = 0;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX() - CENTER_X;
@@ -213,41 +220,73 @@ public class ColorPickerView1 extends View {
         boolean inCenter = Math.sqrt(x * x + y * y) <= mWidth / 5 / 2;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                ScreenUtils.shake();
             case MotionEvent.ACTION_MOVE:
+
+                float touch = (float) Math.atan2(y, x);
+                float angle = touch - (float) Math.toRadians(mDefDegress);
+                mWaterDegress = (float) Math.toDegrees((angle - mLastUnit));
+                mLastUnit = angle;
+
+                //将圆周率转换成0-1进行颜色取色范围解析
+                float unit = angle / (float) (2 * Math.PI);
+                if (unit < 0) {
+                    unit += 1;
+                }
+                defaultColor = interpColor(mColors, unit);
+                postInvalidate();
                 if (!inCenter) {
-                    float touch = (float) Math.atan2(y, x);
-                    float angle = touch - (float) Math.toRadians(mDefDegress);
-                    mWaterDegress = (float) Math.toDegrees((angle - mLastUnit));
-                    mLastUnit = angle;
-                    //将圆周率转换成0-1进行颜色取色范围解析
-                    float unit = angle / (float) (2 * Math.PI);
-                    if (unit < 0) {
-                        unit += 1;
-                    }
-                    defaultColor = interpColor(mColors, unit);
-                    invalidate();
+                    if (listener != null && handler != null)
+                        handler.sendEmptyMessageDelayed(0, 20);
+
+//                    if (listener != null && oldColor != defaultColor)
+//                        listener.colorChanged(toHexEncoding(defaultColor));
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 if (inCenter) {
-                    mWaterDegress = 0;
-                    if (currentLightStatus) {
-                        light = lightClose;
-                        currentLightStatus = false;
-                    } else {
-                        light = lightOpen;
-                        currentLightStatus = true;
+                    //自己点击图片自动切换状态
+                    boolean autoCheck = true;
+                    if (listener != null) {
+                        autoCheck = listener.lightStatus(currentLightStatus, new ClickStatus() {
+                            @Override
+                            public void clickStatus(boolean status) {
+                                updateSwitch(status);
+                            }
+                        });
                     }
-                    if (listener != null)
-                        listener.lightStatus(currentLightStatus);
-                    invalidate();
-                } else {
-                    if (listener != null)
-                        listener.colorChanged(toHexEncoding(defaultColor));
+                    if (autoCheck) {
+                        if (currentLightStatus) {
+                            light = lightClose;
+                            currentLightStatus = false;
+                        } else {
+                            light = lightOpen;
+                            currentLightStatus = true;
+                        }
+                        invalidate();
+                    }
                 }
                 break;
         }
         return true;
+    }
+
+    public interface ClickStatus {
+        void clickStatus(boolean status);
+    }
+
+    public void setCurrentLightStatus(boolean currentLightStatus) {
+        updateSwitch(currentLightStatus);
+    }
+
+    public void updateSwitch(boolean isOPen) {
+        currentLightStatus = isOPen;
+        if (currentLightStatus) {
+            light = lightOpen;
+        } else {
+            light = lightClose;
+        }
+        invalidate();
     }
 
     /**
@@ -276,9 +315,9 @@ public class ColorPickerView1 extends View {
     }
 
     public interface OnTimerListener {
-        void colorChanged(String color);
+        void colorChanged(int color);
 
-        void lightStatus(boolean isOpen);
+        boolean lightStatus(boolean isOpen, ClickStatus clickStatus);
     }
 
     private OnTimerListener listener;
@@ -286,4 +325,16 @@ public class ColorPickerView1 extends View {
     public void setListener(OnTimerListener listener) {
         this.listener = listener;
     }
+
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (listener != null && oldColor != defaultColor)
+                listener.colorChanged(defaultColor);
+            oldColor = defaultColor;
+        }
+    };
+
 }

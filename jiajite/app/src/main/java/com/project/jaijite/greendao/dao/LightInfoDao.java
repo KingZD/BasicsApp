@@ -25,22 +25,29 @@ public class LightInfoDao extends AbstractDao<LightInfo, Long> {
      */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Light_level = new Property(2, int.class, "light_level", false, "LIGHT_LEVEL");
-        public final static Property Color_temp = new Property(3, int.class, "color_temp", false, "COLOR_TEMP");
-        public final static Property Time_on = new Property(4, String.class, "time_on", false, "TIME_ON");
-        public final static Property Time_off = new Property(5, String.class, "time_off", false, "TIME_OFF");
-        public final static Property Delay = new Property(6, String.class, "delay", false, "DELAY");
-        public final static Property Jump = new Property(7, int.class, "jump", false, "JUMP");
-        public final static Property Water = new Property(8, int.class, "water", false, "WATER");
-        public final static Property Touch = new Property(9, int.class, "touch", false, "TOUCH");
-        public final static Property Gflash = new Property(10, int.class, "gflash", false, "GFLASH");
-        public final static Property Bflash = new Property(11, int.class, "bflash", false, "BFLASH");
-        public final static Property Warming = new Property(12, int.class, "warming", false, "WARMING");
-        public final static Property Led_state = new Property(13, int.class, "led_state", false, "LED_STATE");
-        public final static Property Night_lamp_state = new Property(14, int.class, "night_lamp_state", false, "NIGHT_LAMP_STATE");
-        public final static Property IsDelete = new Property(15, int.class, "isDelete", false, "IS_DELETE");
-        public final static Property IsCheck = new Property(16, Boolean.class, "isCheck", false, "IS_CHECK");
+        public final static Property LedId = new Property(1, String.class, "ledId", false, "LED_ID");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property Light_level = new Property(3, int.class, "light_level", false, "LIGHT_LEVEL");
+        public final static Property Color_temp = new Property(4, int.class, "color_temp", false, "COLOR_TEMP");
+        public final static Property Time_on = new Property(5, String.class, "time_on", false, "TIME_ON");
+        public final static Property TimeOnSwitch = new Property(6, Boolean.class, "timeOnSwitch", false, "TIME_ON_SWITCH");
+        public final static Property Time_off = new Property(7, String.class, "time_off", false, "TIME_OFF");
+        public final static Property TimeOffSwitch = new Property(8, Boolean.class, "timeOffSwitch", false, "TIME_OFF_SWITCH");
+        public final static Property Delay = new Property(9, String.class, "delay", false, "DELAY");
+        public final static Property DelayOffSwitch = new Property(10, Boolean.class, "delayOffSwitch", false, "DELAY_OFF_SWITCH");
+        public final static Property Jump = new Property(11, int.class, "jump", false, "JUMP");
+        public final static Property Water = new Property(12, int.class, "water", false, "WATER");
+        public final static Property Touch = new Property(13, int.class, "touch", false, "TOUCH");
+        public final static Property Gflash = new Property(14, int.class, "gflash", false, "GFLASH");
+        public final static Property Bflash = new Property(15, int.class, "bflash", false, "BFLASH");
+        public final static Property Warming = new Property(16, int.class, "warming", false, "WARMING");
+        public final static Property Led_state = new Property(17, int.class, "led_state", false, "LED_STATE");
+        public final static Property Night_lamp_state = new Property(18, int.class, "night_lamp_state", false, "NIGHT_LAMP_STATE");
+        public final static Property IsDelete = new Property(19, int.class, "isDelete", false, "IS_DELETE");
+        public final static Property IsCheck = new Property(20, Boolean.class, "isCheck", false, "IS_CHECK");
+        public final static Property GroupId = new Property(21, String.class, "groupId", false, "GROUP_ID");
+        public final static Property LedMGroup = new Property(22, String.class, "ledMGroup", false, "LED_MGROUP");
+        public final static Property LedCGroup = new Property(23, String.class, "ledCGroup", false, "LED_CGROUP");
     }
 
 
@@ -57,22 +64,29 @@ public class LightInfoDao extends AbstractDao<LightInfo, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"LIGHT_INFO\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
-                "\"NAME\" TEXT," + // 1: name
-                "\"LIGHT_LEVEL\" INTEGER NOT NULL ," + // 2: light_level
-                "\"COLOR_TEMP\" INTEGER NOT NULL ," + // 3: color_temp
-                "\"TIME_ON\" TEXT," + // 4: time_on
-                "\"TIME_OFF\" TEXT," + // 5: time_off
-                "\"DELAY\" TEXT," + // 6: delay
-                "\"JUMP\" INTEGER NOT NULL ," + // 7: jump
-                "\"WATER\" INTEGER NOT NULL ," + // 8: water
-                "\"TOUCH\" INTEGER NOT NULL ," + // 9: touch
-                "\"GFLASH\" INTEGER NOT NULL ," + // 10: gflash
-                "\"BFLASH\" INTEGER NOT NULL ," + // 11: bflash
-                "\"WARMING\" INTEGER NOT NULL ," + // 12: warming
-                "\"LED_STATE\" INTEGER NOT NULL ," + // 13: led_state
-                "\"NIGHT_LAMP_STATE\" INTEGER NOT NULL ," + // 14: night_lamp_state
-                "\"IS_DELETE\" INTEGER NOT NULL ," + // 15: isDelete
-                "\"IS_CHECK\" INTEGER);"); // 16: isCheck
+                "\"LED_ID\" TEXT," + // 1: ledId
+                "\"NAME\" TEXT," + // 2: name
+                "\"LIGHT_LEVEL\" INTEGER NOT NULL ," + // 3: light_level
+                "\"COLOR_TEMP\" INTEGER NOT NULL ," + // 4: color_temp
+                "\"TIME_ON\" TEXT," + // 5: time_on
+                "\"TIME_ON_SWITCH\" INTEGER," + // 6: timeOnSwitch
+                "\"TIME_OFF\" TEXT," + // 7: time_off
+                "\"TIME_OFF_SWITCH\" INTEGER," + // 8: timeOffSwitch
+                "\"DELAY\" TEXT," + // 9: delay
+                "\"DELAY_OFF_SWITCH\" INTEGER," + // 10: delayOffSwitch
+                "\"JUMP\" INTEGER NOT NULL ," + // 11: jump
+                "\"WATER\" INTEGER NOT NULL ," + // 12: water
+                "\"TOUCH\" INTEGER NOT NULL ," + // 13: touch
+                "\"GFLASH\" INTEGER NOT NULL ," + // 14: gflash
+                "\"BFLASH\" INTEGER NOT NULL ," + // 15: bflash
+                "\"WARMING\" INTEGER NOT NULL ," + // 16: warming
+                "\"LED_STATE\" INTEGER NOT NULL ," + // 17: led_state
+                "\"NIGHT_LAMP_STATE\" INTEGER NOT NULL ," + // 18: night_lamp_state
+                "\"IS_DELETE\" INTEGER NOT NULL ," + // 19: isDelete
+                "\"IS_CHECK\" INTEGER," + // 20: isCheck
+                "\"GROUP_ID\" TEXT," + // 21: groupId
+                "\"LED_MGROUP\" TEXT," + // 22: ledMGroup
+                "\"LED_CGROUP\" TEXT);"); // 23: ledCGroup
     }
 
     /** Drops the underlying database table. */
@@ -90,40 +104,75 @@ public class LightInfoDao extends AbstractDao<LightInfo, Long> {
             stmt.bindLong(1, id);
         }
  
+        String ledId = entity.getLedId();
+        if (ledId != null) {
+            stmt.bindString(2, ledId);
+        }
+ 
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
-        stmt.bindLong(3, entity.getLight_level());
-        stmt.bindLong(4, entity.getColor_temp());
+        stmt.bindLong(4, entity.getLight_level());
+        stmt.bindLong(5, entity.getColor_temp());
  
         String time_on = entity.getTime_on();
         if (time_on != null) {
-            stmt.bindString(5, time_on);
+            stmt.bindString(6, time_on);
+        }
+ 
+        Boolean timeOnSwitch = entity.getTimeOnSwitch();
+        if (timeOnSwitch != null) {
+            stmt.bindLong(7, timeOnSwitch ? 1L: 0L);
         }
  
         String time_off = entity.getTime_off();
         if (time_off != null) {
-            stmt.bindString(6, time_off);
+            stmt.bindString(8, time_off);
+        }
+ 
+        Boolean timeOffSwitch = entity.getTimeOffSwitch();
+        if (timeOffSwitch != null) {
+            stmt.bindLong(9, timeOffSwitch ? 1L: 0L);
         }
  
         String delay = entity.getDelay();
         if (delay != null) {
-            stmt.bindString(7, delay);
+            stmt.bindString(10, delay);
         }
-        stmt.bindLong(8, entity.getJump());
-        stmt.bindLong(9, entity.getWater());
-        stmt.bindLong(10, entity.getTouch());
-        stmt.bindLong(11, entity.getGflash());
-        stmt.bindLong(12, entity.getBflash());
-        stmt.bindLong(13, entity.getWarming());
-        stmt.bindLong(14, entity.getLed_state());
-        stmt.bindLong(15, entity.getNight_lamp_state());
-        stmt.bindLong(16, entity.getIsDelete());
+ 
+        Boolean delayOffSwitch = entity.getDelayOffSwitch();
+        if (delayOffSwitch != null) {
+            stmt.bindLong(11, delayOffSwitch ? 1L: 0L);
+        }
+        stmt.bindLong(12, entity.getJump());
+        stmt.bindLong(13, entity.getWater());
+        stmt.bindLong(14, entity.getTouch());
+        stmt.bindLong(15, entity.getGflash());
+        stmt.bindLong(16, entity.getBflash());
+        stmt.bindLong(17, entity.getWarming());
+        stmt.bindLong(18, entity.getLed_state());
+        stmt.bindLong(19, entity.getNight_lamp_state());
+        stmt.bindLong(20, entity.getIsDelete());
  
         Boolean isCheck = entity.getIsCheck();
         if (isCheck != null) {
-            stmt.bindLong(17, isCheck ? 1L: 0L);
+            stmt.bindLong(21, isCheck ? 1L: 0L);
+        }
+ 
+        String groupId = entity.getGroupId();
+        if (groupId != null) {
+            stmt.bindString(22, groupId);
+        }
+ 
+        String ledMGroup = entity.getLedMGroup();
+        if (ledMGroup != null) {
+            stmt.bindString(23, ledMGroup);
+        }
+ 
+        String ledCGroup = entity.getLedCGroup();
+        if (ledCGroup != null) {
+            stmt.bindString(24, ledCGroup);
         }
     }
 
@@ -136,40 +185,75 @@ public class LightInfoDao extends AbstractDao<LightInfo, Long> {
             stmt.bindLong(1, id);
         }
  
+        String ledId = entity.getLedId();
+        if (ledId != null) {
+            stmt.bindString(2, ledId);
+        }
+ 
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
-        stmt.bindLong(3, entity.getLight_level());
-        stmt.bindLong(4, entity.getColor_temp());
+        stmt.bindLong(4, entity.getLight_level());
+        stmt.bindLong(5, entity.getColor_temp());
  
         String time_on = entity.getTime_on();
         if (time_on != null) {
-            stmt.bindString(5, time_on);
+            stmt.bindString(6, time_on);
+        }
+ 
+        Boolean timeOnSwitch = entity.getTimeOnSwitch();
+        if (timeOnSwitch != null) {
+            stmt.bindLong(7, timeOnSwitch ? 1L: 0L);
         }
  
         String time_off = entity.getTime_off();
         if (time_off != null) {
-            stmt.bindString(6, time_off);
+            stmt.bindString(8, time_off);
+        }
+ 
+        Boolean timeOffSwitch = entity.getTimeOffSwitch();
+        if (timeOffSwitch != null) {
+            stmt.bindLong(9, timeOffSwitch ? 1L: 0L);
         }
  
         String delay = entity.getDelay();
         if (delay != null) {
-            stmt.bindString(7, delay);
+            stmt.bindString(10, delay);
         }
-        stmt.bindLong(8, entity.getJump());
-        stmt.bindLong(9, entity.getWater());
-        stmt.bindLong(10, entity.getTouch());
-        stmt.bindLong(11, entity.getGflash());
-        stmt.bindLong(12, entity.getBflash());
-        stmt.bindLong(13, entity.getWarming());
-        stmt.bindLong(14, entity.getLed_state());
-        stmt.bindLong(15, entity.getNight_lamp_state());
-        stmt.bindLong(16, entity.getIsDelete());
+ 
+        Boolean delayOffSwitch = entity.getDelayOffSwitch();
+        if (delayOffSwitch != null) {
+            stmt.bindLong(11, delayOffSwitch ? 1L: 0L);
+        }
+        stmt.bindLong(12, entity.getJump());
+        stmt.bindLong(13, entity.getWater());
+        stmt.bindLong(14, entity.getTouch());
+        stmt.bindLong(15, entity.getGflash());
+        stmt.bindLong(16, entity.getBflash());
+        stmt.bindLong(17, entity.getWarming());
+        stmt.bindLong(18, entity.getLed_state());
+        stmt.bindLong(19, entity.getNight_lamp_state());
+        stmt.bindLong(20, entity.getIsDelete());
  
         Boolean isCheck = entity.getIsCheck();
         if (isCheck != null) {
-            stmt.bindLong(17, isCheck ? 1L: 0L);
+            stmt.bindLong(21, isCheck ? 1L: 0L);
+        }
+ 
+        String groupId = entity.getGroupId();
+        if (groupId != null) {
+            stmt.bindString(22, groupId);
+        }
+ 
+        String ledMGroup = entity.getLedMGroup();
+        if (ledMGroup != null) {
+            stmt.bindString(23, ledMGroup);
+        }
+ 
+        String ledCGroup = entity.getLedCGroup();
+        if (ledCGroup != null) {
+            stmt.bindString(24, ledCGroup);
         }
     }
 
@@ -182,22 +266,29 @@ public class LightInfoDao extends AbstractDao<LightInfo, Long> {
     public LightInfo readEntity(Cursor cursor, int offset) {
         LightInfo entity = new LightInfo( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.getInt(offset + 2), // light_level
-            cursor.getInt(offset + 3), // color_temp
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // time_on
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // time_off
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // delay
-            cursor.getInt(offset + 7), // jump
-            cursor.getInt(offset + 8), // water
-            cursor.getInt(offset + 9), // touch
-            cursor.getInt(offset + 10), // gflash
-            cursor.getInt(offset + 11), // bflash
-            cursor.getInt(offset + 12), // warming
-            cursor.getInt(offset + 13), // led_state
-            cursor.getInt(offset + 14), // night_lamp_state
-            cursor.getInt(offset + 15), // isDelete
-            cursor.isNull(offset + 16) ? null : cursor.getShort(offset + 16) != 0 // isCheck
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // ledId
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
+            cursor.getInt(offset + 3), // light_level
+            cursor.getInt(offset + 4), // color_temp
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // time_on
+            cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0, // timeOnSwitch
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // time_off
+            cursor.isNull(offset + 8) ? null : cursor.getShort(offset + 8) != 0, // timeOffSwitch
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // delay
+            cursor.isNull(offset + 10) ? null : cursor.getShort(offset + 10) != 0, // delayOffSwitch
+            cursor.getInt(offset + 11), // jump
+            cursor.getInt(offset + 12), // water
+            cursor.getInt(offset + 13), // touch
+            cursor.getInt(offset + 14), // gflash
+            cursor.getInt(offset + 15), // bflash
+            cursor.getInt(offset + 16), // warming
+            cursor.getInt(offset + 17), // led_state
+            cursor.getInt(offset + 18), // night_lamp_state
+            cursor.getInt(offset + 19), // isDelete
+            cursor.isNull(offset + 20) ? null : cursor.getShort(offset + 20) != 0, // isCheck
+            cursor.isNull(offset + 21) ? null : cursor.getString(offset + 21), // groupId
+            cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22), // ledMGroup
+            cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23) // ledCGroup
         );
         return entity;
     }
@@ -205,22 +296,29 @@ public class LightInfoDao extends AbstractDao<LightInfo, Long> {
     @Override
     public void readEntity(Cursor cursor, LightInfo entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setLight_level(cursor.getInt(offset + 2));
-        entity.setColor_temp(cursor.getInt(offset + 3));
-        entity.setTime_on(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setTime_off(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setDelay(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setJump(cursor.getInt(offset + 7));
-        entity.setWater(cursor.getInt(offset + 8));
-        entity.setTouch(cursor.getInt(offset + 9));
-        entity.setGflash(cursor.getInt(offset + 10));
-        entity.setBflash(cursor.getInt(offset + 11));
-        entity.setWarming(cursor.getInt(offset + 12));
-        entity.setLed_state(cursor.getInt(offset + 13));
-        entity.setNight_lamp_state(cursor.getInt(offset + 14));
-        entity.setIsDelete(cursor.getInt(offset + 15));
-        entity.setIsCheck(cursor.isNull(offset + 16) ? null : cursor.getShort(offset + 16) != 0);
+        entity.setLedId(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setLight_level(cursor.getInt(offset + 3));
+        entity.setColor_temp(cursor.getInt(offset + 4));
+        entity.setTime_on(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setTimeOnSwitch(cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0);
+        entity.setTime_off(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setTimeOffSwitch(cursor.isNull(offset + 8) ? null : cursor.getShort(offset + 8) != 0);
+        entity.setDelay(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setDelayOffSwitch(cursor.isNull(offset + 10) ? null : cursor.getShort(offset + 10) != 0);
+        entity.setJump(cursor.getInt(offset + 11));
+        entity.setWater(cursor.getInt(offset + 12));
+        entity.setTouch(cursor.getInt(offset + 13));
+        entity.setGflash(cursor.getInt(offset + 14));
+        entity.setBflash(cursor.getInt(offset + 15));
+        entity.setWarming(cursor.getInt(offset + 16));
+        entity.setLed_state(cursor.getInt(offset + 17));
+        entity.setNight_lamp_state(cursor.getInt(offset + 18));
+        entity.setIsDelete(cursor.getInt(offset + 19));
+        entity.setIsCheck(cursor.isNull(offset + 20) ? null : cursor.getShort(offset + 20) != 0);
+        entity.setGroupId(cursor.isNull(offset + 21) ? null : cursor.getString(offset + 21));
+        entity.setLedMGroup(cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22));
+        entity.setLedCGroup(cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23));
      }
     
     @Override

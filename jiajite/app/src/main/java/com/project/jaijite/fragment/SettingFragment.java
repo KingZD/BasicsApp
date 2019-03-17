@@ -1,5 +1,6 @@
 package com.project.jaijite.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +22,7 @@ import com.project.jaijite.event.UpdateDeviceDataEvent;
 import com.project.jaijite.greendao.db.DeviceDB;
 import com.project.jaijite.gui.SettingHeaderView;
 import com.project.jaijite.gui.SwitchButton;
+import com.project.jaijite.util.EasyLinkUtil;
 import com.project.jaijite.util.SPUtils;
 import com.project.jaijite.util.ToastUtils;
 
@@ -36,7 +38,8 @@ import butterknife.OnClick;
 
 public class SettingFragment extends BaseFragment
         implements SettingHeaderView.OnHeaderListener,
-        BaseQuickAdapter.OnItemChildClickListener {
+        BaseQuickAdapter.OnItemChildClickListener,
+        BaseQuickAdapter.OnItemChildLongClickListener {
     @BindView(R.id.rlList)
     RecyclerView rlList;
     DeviceAdapter mAdapter;
@@ -52,7 +55,7 @@ public class SettingFragment extends BaseFragment
         EventBus.getDefault().register(this);
         setTitleLeft("", -1);
         setTvTitle("设置");
-        setTitleRight("退出", -1);
+//        setTitleRight("退出", -1);
         mAdapter = new DeviceAdapter();
         rlList.setLayoutManager(new LinearLayoutManager(getActivity()));
         rlList.setAdapter(mAdapter);
@@ -60,6 +63,7 @@ public class SettingFragment extends BaseFragment
         headerView.setOnHeaderListener(this);
         mAdapter.addHeaderView(headerView);
         mAdapter.setOnItemChildClickListener(this);
+        mAdapter.setOnItemChildLongClickListener(this);
         showDeviceData();
     }
 
@@ -166,5 +170,60 @@ public class SettingFragment extends BaseFragment
         super.onDestroy();
         if (headerView != null)
             headerView.onDstory();
+    }
+
+    @Override
+    public boolean onItemChildLongClick(BaseQuickAdapter adapter, View view, int position) {
+        final DeviceInfo deviceInfo = mAdapter.getData().get(position);
+        switch (view.getId()) {
+            case R.id.tvTitle:
+                TipsDialog.getInstance()
+                        .createDialog(getActivity(), R.layout.dialog_light_delete)
+                        .bindClick(R.id.leftButton, null)
+                        .bindClick(R.id.rightButton, new TipsDialog.TipClickListener() {
+                            @Override
+                            public void onClick(View v, TipsDialog dialog) {
+                                showLoading("正在更新设备:" + deviceInfo.getShowName(), new DialogInterface.OnCancelListener() {
+                                    @Override
+                                    public void onCancel(DialogInterface dialog) {
+                                        ToastUtils.showShortSafe("更新已取消");
+                                        EasyLinkUtil.stopScan();
+                                    }
+                                });
+                                EasyLinkUtil.getDeviceInfoByDefaultMac(deviceInfo.getMac(), new EasyLinkUtil.ScanReadyDeviceListener() {
+                                    @Override
+                                    public void getReadyDeviceInfo(DeviceInfo deviceInfo) {
+                                        ToastUtils.showShortSafe("设备信息更新成功");
+                                    }
+
+                                    @Override
+                                    public void timeout() {
+                                        hideLoading();
+                                        EasyLinkUtil.stopScan();
+                                        ToastUtils.showShortSafe("设备信息更新失败，试试重新添加设备");
+                                    }
+
+                                    @Override
+                                    public void notHaveOpenDevice() {
+                                        hideLoading();
+                                        EasyLinkUtil.stopScan();
+                                        ToastUtils.showShortSafe("设备信息更新失败，试试重新添加设备");
+                                    }
+
+                                    @Override
+                                    public void error(String msg) {
+                                        hideLoading();
+                                        EasyLinkUtil.stopScan();
+                                        ToastUtils.showShortSafe("设备信息更新失败，试试重新添加设备");
+                                    }
+                                }, 5);//每3s获取一次 10次就是30s
+                            }
+                        })
+                        .setText(R.id.contentTv, "是否确定更新设备"+deviceInfo.getShowName()+"？")
+                        .show();
+
+                break;
+        }
+        return false;
     }
 }

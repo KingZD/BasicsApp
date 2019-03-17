@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/lightGray"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_10">
+
+        <NumberPicker
+            android:id="@+id/npHours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants" />
+
+        <TextView
+            android:id="@+id/tvHour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/hours"
+            android:textSize="22sp" />
+
+        <NumberPicker
+            android:id="@+id/npMinute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/minutes"
+            android:textSize="22sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/leftButton"
+            android:layout_width="0.0dip"
+            android:layout_height="match_parent"
+            android:layout_marginRight="1.0dip"
+            android:layout_weight="1.0"
+            android:background="@color/lightGray"
+            android:text="取消"
+            android:textColor="@color/black"
+            android:textSize="13.0sp" />
+
+        <Button
+            android:id="@+id/rightButton"
+            android:layout_width="0.0dip"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="1.0dip"
+            android:layout_weight="1.0"
+            android:background="@color/lightGray"
+            android:text="确认"
+            android:textColor="@color/black"
+            android:textSize="13.0sp" />
+    </LinearLayout>
+</LinearLayout>

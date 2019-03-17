@@ -17,6 +17,7 @@ import com.project.jaijite.base.BaseTitleActivity;
 import com.project.jaijite.util.LogUtils;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class WebViewActivity extends BaseTitleActivity {
     public static String PARAM_URL = "param_url";
@@ -113,6 +114,7 @@ public class WebViewActivity extends BaseTitleActivity {
         }
     }
 
+    @OnClick(R.id.btLeft)
     public void close(View paramView) {
         finish();
     }

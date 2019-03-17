@@ -37,29 +37,30 @@ public class StartActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                if (LoginBusiness.isLogin()) {
+//                if (LoginBusiness.isLogin()) {
                     startActivity(new Intent(StartActivity.this,MainActivity.class));
-                } else {
-                    LoginBusiness.login(new ILoginCallback() {
-                        @Override
-                        public void onLoginSuccess() {
-                            mH.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    startActivity(new Intent(StartActivity.this,MainActivity.class));
-                                }
-                            }, 0);
-
-                        }
-
-
-                        @Override
-                        public void onLoginFailed(int i, String s) {
-                            ToastUtils.showShortSafe("登录失败 :" + s);
-                        }
-                    });
-                }
-                finish();
+                    finish();
+//                } else {
+//                    LoginBusiness.login(new ILoginCallback() {
+//                        @Override
+//                        public void onLoginSuccess() {
+//                            mH.postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    startActivity(new Intent(StartActivity.this,MainActivity.class));
+//                                }
+//                            }, 0);
+//
+//                        }
+//
+//
+//                        @Override
+//                        public void onLoginFailed(int i, String s) {
+//                            ToastUtils.showShortSafe("登录失败 :" + s);
+//                        }
+//                    });
+//                }
+//                finish();
             }
         };
         countDownTimer.start();

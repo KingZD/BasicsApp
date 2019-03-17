@@ -13,7 +13,7 @@ public class ManualActivity extends Activity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manual);
+        setContentView(R.layout.activity_manual1);
     }
 
     @Override

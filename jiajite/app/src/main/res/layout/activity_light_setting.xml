@@ -12,32 +12,32 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/ivGroupOne"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:src="@drawable/group_a_select" />
+            android:layout_weight="1" />
 
         <ImageView
+            android:id="@+id/ivGroupTwo"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:src="@drawable/group_b_select" />
+            android:layout_weight="1" />
 
         <ImageView
+            android:id="@+id/ivGroupThree"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:src="@drawable/group_c_select" />
+            android:layout_weight="1" />
 
         <ImageView
+            android:id="@+id/ivGroupFour"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:src="@drawable/group_d_select" />
+            android:layout_weight="1" />
     </LinearLayout>
 
     <View

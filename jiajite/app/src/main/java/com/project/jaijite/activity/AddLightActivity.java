@@ -46,7 +46,8 @@ public class AddLightActivity extends BaseTitleActivity {
         Iterator<LightInfo> iterator = datas.iterator();
         while (iterator.hasNext()) {
             LightInfo info = iterator.next();
-            if (!info.getIsCheck())
+            info.setIsCheck(false);
+            if (info.getIsDelete() == 1)
                 iterator.remove();
         }
         LightingDB.updateLight(datas);

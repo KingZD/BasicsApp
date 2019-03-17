@@ -2,15 +2,19 @@ package com.project.jaijite.util;
 
 import android.app.Activity;
 import android.app.KeyguardManager;
+import android.app.Service;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import com.project.jaijite.KittApplication;
 
@@ -221,5 +225,36 @@ public class ScreenUtils {
             e.printStackTrace();
             return -123;
         }
+    }
+
+    public static int getResId(String name) {
+        String packageName = KittApplication.getApplication().getPackageName();
+        return KittApplication.getApplication().getResources()
+                .getIdentifier(name, "mipmap", packageName);
+    }
+
+
+    /**
+     * Description：隐藏输入法
+     */
+    public static void hideInput(Activity activity) {
+        // 是否存在焦点
+        if (activity.getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+    //创建震动服务对象
+    private static Vibrator mVibrator;
+
+    public static void shake() {
+        boolean touchShake = SPUtils.getInstance().getBoolean("touchShake");
+        if (!touchShake) return;
+        if (mVibrator == null)
+            //获取手机震动服务
+            mVibrator = (Vibrator) KittApplication.getApplication().getSystemService(Service.VIBRATOR_SERVICE);
+        mVibrator.vibrate(100);
     }
 }

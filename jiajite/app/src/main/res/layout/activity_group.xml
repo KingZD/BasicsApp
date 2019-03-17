@@ -23,7 +23,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
-            android:src="@drawable/group_a_select" />
+            android:src="@mipmap/group_open_1" />
     </RelativeLayout>
 
     <View
@@ -50,7 +50,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
-            android:src="@drawable/group_b_select" />
+            android:src="@mipmap/group_open_2" />
     </RelativeLayout>
 
     <View
@@ -77,7 +77,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
-            android:src="@drawable/group_c_select" />
+            android:src="@mipmap/group_open_3" />
     </RelativeLayout>
 
     <View
@@ -104,7 +104,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
-            android:src="@drawable/group_d_select" />
+            android:src="@mipmap/group_open_4" />
     </RelativeLayout>
 
     <View

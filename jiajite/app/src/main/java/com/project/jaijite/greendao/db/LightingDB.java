@@ -12,8 +12,8 @@ public class LightingDB {
      *
      * @param name
      */
-    public static void insertLightData(String name) {
-        DbManager.getDaoSession().getLightInfoDao().insert(new LightInfo(name));
+    public static void insertLightData(String name, String ledId) {
+        DbManager.getDaoSession().getLightInfoDao().insert(new LightInfo(name, ledId));
     }
 
     /**
@@ -53,6 +53,15 @@ public class LightingDB {
                 .queryBuilder()
                 .where(LightInfoDao.Properties.IsDelete.eq(1))
                 .list();
+    }
+
+    public static LightInfo refreshLightInfo(LightInfo info) {
+        return DbManager
+                .getDaoSession()
+                .getLightInfoDao()
+                .queryBuilder()
+                .where(LightInfoDao.Properties.Id.eq(info.getId()))
+                .unique();
     }
 
     public static void updateLight(LightInfo info) {

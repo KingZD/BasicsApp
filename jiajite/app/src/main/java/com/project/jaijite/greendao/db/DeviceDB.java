@@ -1,5 +1,7 @@
 package com.project.jaijite.greendao.db;
 
+import android.text.TextUtils;
+
 import com.project.jaijite.entity.DeviceInfo;
 import com.project.jaijite.greendao.dao.DeviceInfoDao;
 import com.project.jaijite.greendao.helper.DbManager;
@@ -30,7 +32,8 @@ public class DeviceDB {
 
     public static void updateOrInsert(DeviceInfo info) {
         //如果通过设备mac查到设备 则更新设备信息
-        DeviceInfo di = DbManager.getDaoSession().getDeviceInfoDao().queryBuilder()
+        DeviceInfo di = TextUtils.isEmpty(info.getMac()) ?
+                null : DbManager.getDaoSession().getDeviceInfoDao().queryBuilder()
                 .where(DeviceInfoDao.Properties.Mac.eq(info.getMac()))
                 .build()
                 .unique();

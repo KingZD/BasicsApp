@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@mipmap/group_d_open"  android:state_checked="true" />
+    <item android:drawable="@mipmap/group_open_4"  android:state_checked="true" />
 
-    <item android:drawable="@mipmap/group_d_close"/>
+    <item android:drawable="@mipmap/group_close_4"/>
 </selector>

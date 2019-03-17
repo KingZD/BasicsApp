@@ -22,6 +22,7 @@
         <ImageView
             android:layout_width="156dp"
             android:layout_height="100dp"
+            android:scaleType="fitCenter"
             android:src="@mipmap/logo" />
 
         <LinearLayout

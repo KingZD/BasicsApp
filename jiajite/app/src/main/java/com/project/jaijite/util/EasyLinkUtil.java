@@ -1,22 +1,23 @@
 package com.project.jaijite.util;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.ProgressBar;
 
-import com.alibaba.fastjson.JSON;
 import com.mxchip.ftc_service.FTC_Listener;
 import com.mxchip.ftc_service.FTC_Service;
 import com.project.jaijite.KittApplication;
-import com.project.jaijite.activity.AddDeviceActivity;
+import com.project.jaijite.dialog.LoadingDialog;
 import com.project.jaijite.entity.DeviceInfo;
-import com.project.jaijite.event.UpdateDeviceDataEvent;
 import com.project.jaijite.greendao.db.DeviceDB;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -43,6 +44,10 @@ import io.reactivex.schedulers.Schedulers;
 public class EasyLinkUtil {
     static EasyLink el;
     static EasylinkP2P elp2p;
+    /**
+     * Integer constant to check if this build is currently running under Jellybean and above
+     */
+    private static final int BUILD_VERSION_JELLYBEAN = 17;
 
     public static EasyLink getEasyLink() {
         if (el == null) {
@@ -71,10 +76,6 @@ public class EasyLinkUtil {
      * @return
      */
 
-    public static EasyLinkParams getParam(String pwd) {
-        return getParam(getSSID(), pwd);
-    }
-
     public static EasyLinkParams getParam(String ssid, String pwd) {
         EasyLinkParams params = new EasyLinkParams();
         params.ssid = ssid;
@@ -84,8 +85,17 @@ public class EasyLinkUtil {
         return params;
     }
 
-    public static String getSSID() {
-        return getEasyLink().getSSID();
+    public static String getSSID(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+            return networkInfo.getExtraInfo();
+        } else {
+            WifiManager myWifiManager = (WifiManager) context
+                    .getSystemService(Context.WIFI_SERVICE);
+            WifiInfo wifiInfo = myWifiManager.getConnectionInfo();
+            return wifiInfo.getSSID();
+        }
     }
 
     static WifiManager.MulticastLock multicastLock;
@@ -124,21 +134,38 @@ public class EasyLinkUtil {
     static WifiManager.MulticastLock lock = null;
     static SampleListener sl = null;
     static Disposable scanSubscribe;
+    static ScanReadyDeviceListener listener;
 
     /**
      * 当前打开的设备地址
      * 不适用数据库存储的ip地址是因为可能ip地址会更换，且用户没有扫描更新设备
      *
-     * @param listener 监听
-     * @param timer    尝试次数
+     * @param ls    监听
+     * @param timer 尝试次数
      */
-    public static void getDeviceInfoByDefaultMac(final ScanReadyDeviceListener listener, final int timer) {
+    public static void getDeviceInfoByDefaultMac(ScanReadyDeviceListener ls, final int timer) {
+        listener = ls;
         boolean hasDevice = false;
         List<DeviceInfo> allDeviceData = DeviceDB.getAllDeviceData();
         for (DeviceInfo info : allDeviceData) {
             if (info.getCheck()) {
                 hasDevice = true;
-                getDeviceInfoByMac(info.getMac(), listener, timer);
+                getDeviceInfoByMac(info.getMac(), timer);
+                break;
+            }
+        }
+        if (!hasDevice && listener != null)
+            listener.notHaveOpenDevice();
+    }
+
+    public static void getDeviceInfoByDefaultMac(String mac, ScanReadyDeviceListener ls, final int timer) {
+        listener = ls;
+        boolean hasDevice = false;
+        List<DeviceInfo> allDeviceData = DeviceDB.getAllDeviceData();
+        for (DeviceInfo info : allDeviceData) {
+            if (info.getMac().equals(mac)) {
+                hasDevice = true;
+                getDeviceInfoByMac(info.getMac(), timer);
                 break;
             }
         }
@@ -149,11 +176,10 @@ public class EasyLinkUtil {
     /**
      * 当前打开的设备地址
      *
-     * @param mac      设备地址
-     * @param listener 监听
-     * @param timer    尝试次数
+     * @param mac   设备地址
+     * @param timer 尝试次数
      */
-    public static void getDeviceInfoByMac(final String mac, final ScanReadyDeviceListener listener, final int timer) {
+    public static void getDeviceInfoByMac(final String mac, final int timer) {
         if (TextUtils.isEmpty(mac)) {
             if (listener != null)
                 listener.notHaveOpenDevice();
@@ -166,7 +192,8 @@ public class EasyLinkUtil {
                 .map(new Function<Long, Long>() {
                     @Override
                     public Long apply(Long aLong) throws Exception {
-                            scanDevice(mac, listener);//每三秒运行一次 否则时间可能没有数据
+                        if (aLong % 3 == 0)
+                            scanDevice(mac);//每三秒运行一次 否则时间可能没有数据
                         return aLong;
                     }
                 })
@@ -175,7 +202,7 @@ public class EasyLinkUtil {
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
-                        if (aLong >= timer) {
+                        if (aLong >= timer * 3) {
                             if (listener != null)
                                 listener.timeout();
                             stopScan();
@@ -193,11 +220,10 @@ public class EasyLinkUtil {
             lock.release();
         }
         lock = null;
-        jmdns = null;
         sl = null;
     }
 
-    private static void scanDevice(String mac, ScanReadyDeviceListener listener) {
+    private static void scanDevice(String mac) {
         try {
             if (intf == null) {
                 intf = getLocalIpAddress();
@@ -216,11 +242,13 @@ public class EasyLinkUtil {
                 lock = wm.createMulticastLock("mylock");
                 lock.setReferenceCounted(true);
                 lock.acquire();
-                sl = new SampleListener(mac, listener);
+                sl = new SampleListener(mac);
                 jmdns.addServiceListener("_easylink._tcp.local.", sl);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            if (listener != null)
+                listener.error(e.getLocalizedMessage());
         }
     }
 
@@ -248,61 +276,54 @@ public class EasyLinkUtil {
 
     private static class SampleListener implements ServiceListener, ServiceTypeListener {
         String mac;
-        ScanReadyDeviceListener listener;
 
-        SampleListener(String mac, ScanReadyDeviceListener listener) {
+        SampleListener(String mac) {
             this.mac = mac;
-            this.listener = listener;
         }
 
+        @SuppressLint("CheckResult")
         public void serviceAdded(ServiceEvent event) {
-            ServiceInfo sInfo = jmdns.getServiceInfo("_easylink._tcp.local.",
-                    event.getName());
-            if (null != sInfo) {
-                String mac = "MAC:".concat(EasyLinkTXTRecordUtil.setDeviceMac(String.valueOf(sInfo.getTextString())));
-                if (this.mac.equals(mac)) {
-                    DeviceInfo info = new DeviceInfo(null,
-                            sInfo.getName(),
-                            "",
-                            "",
-                            "IP:".concat(EasyLinkTXTRecordUtil.setDeviceIP(String.valueOf(sInfo.getAddress()))),
-                            mac,
-                            sInfo.getName(),
-                            sInfo.getType(),
-                            sInfo.getPort(),
-                            false);
-                    stopScan();
-                    Observable
-                            .just(info)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Observer<DeviceInfo>() {
-                                @Override
-                                public void onSubscribe(Disposable d) {
-
-                                }
-
-                                @Override
-                                public void onNext(DeviceInfo deviceInfo) {
-                                    if (listener != null)
-                                        listener.getReadyDeviceInfo(deviceInfo);
-                                }
-
-                                @Override
-                                public void onError(Throwable e) {
-                                    if (listener != null)
-                                        listener.error(e.getLocalizedMessage());
-                                }
-
-                                @Override
-                                public void onComplete() {
-
-                                }
-                            });
-                } else {
-                    if (listener != null)
-                        listener.notHaveOpenDevice();
+            try {
+                ServiceInfo sInfo = jmdns.getServiceInfo("_easylink._tcp.local.",
+                        event.getName());
+                if (null != sInfo) {
+                    String mac = "MAC:".concat(EasyLinkTXTRecordUtil.setDeviceMac(String.valueOf(sInfo.getTextString())));
+                    if (this.mac.equals(mac)) {
+                        Observable
+                                .just(new DeviceInfo(null,
+                                        sInfo.getName(),
+                                        "",
+                                        "",
+                                        "IP:".concat(EasyLinkTXTRecordUtil.setDeviceIP(String.valueOf(sInfo.getAddress()))),
+                                        mac,
+                                        sInfo.getName(),
+                                        sInfo.getType(),
+                                        sInfo.getPort(),
+                                        false))
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Consumer<DeviceInfo>() {
+                                    @Override
+                                    public void accept(DeviceInfo deviceInfo) throws Exception {
+                                        if (listener != null)
+                                            listener.getReadyDeviceInfo(deviceInfo);
+                                    }
+                                });
+                        stopScan();
+                    } else {
+                        if (listener != null)
+                            listener.notHaveOpenDevice();
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (listener != null)
+                    if (event != null && event.getInfo() != null)
+                        listener.error("MAC:" + event.getInfo().getTextString() +
+                                "IP:".concat(EasyLinkTXTRecordUtil.setDeviceIP(String.valueOf(event.getInfo().getAddress()))) +
+                                "port:" + event.getInfo());
+                    else
+                        listener.error("连接设备失败");
             }
         }
 
@@ -331,5 +352,44 @@ public class EasyLinkUtil {
         void notHaveOpenDevice();
 
         void error(String msg);
+    }
+
+    public static DeviceInfo getDefaultCheckDevice() {
+        DeviceInfo deviceInfo = null;
+        List<DeviceInfo> allDeviceData = DeviceDB.getAllDeviceData();
+        for (DeviceInfo info : allDeviceData) {
+            if (info.getCheck()) {
+                deviceInfo = info;
+                break;
+            }
+        }
+        return deviceInfo;
+    }
+
+    /**
+     * Filters the double Quotations occuring in Jellybean and above devices.
+     * This is only occuring in SDK 17 and above this is documented in SDK as   http://developer.android.com/reference/android/net/wifi/WifiConfiguration.html#SSID
+     *
+     * @param connectedSSID
+     * @return
+     */
+    public static String removeSSIDQuotes(String connectedSSID) {
+        int currentVersion = Build.VERSION.SDK_INT;
+
+        if (currentVersion >= BUILD_VERSION_JELLYBEAN) {
+            if (connectedSSID.startsWith("\"") && connectedSSID.endsWith("\"")) {
+                connectedSSID = connectedSSID.substring(1, connectedSSID.length() - 1);
+            }
+        }
+        return connectedSSID;
+    }
+
+    /**
+     * returns current  ssid  connected to
+     *
+     * @return current ssid
+     */
+    public static String getCurrentSSID(Context context) {
+        return removeSSIDQuotes(getSSID(context));
     }
 }
